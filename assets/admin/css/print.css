@@ -1,0 +1,119 @@
+.sheet {display: none;}
+@media print {  
+     
+    body {
+        margin:0;
+        color:#000;
+        background-color:#fff;
+        font:7pt "Calibri", san-serif;
+        line-height:1.3;
+        -webkit-print-color-adjust: exact !important;
+        -moz-print-color-adjust: exact !important;
+        margin:0!important;
+        padding:0!important;
+        width:100%;
+        background: none !important; 
+    }
+    h1, h2, h3, h4, h5, h6{
+        color:#000; 
+        page-break-after:avoid;
+    }
+  
+    @page {
+        background-color:white!important;
+        size:A5 portrait;
+        width:100%;
+        margin-top: 30px !important;
+        margin-bottom: 30px !important;
+    } 
+    @page{
+        margin:0.8cm;
+    }
+    @page :first {
+        margin-top:0.8cm;
+    }   
+    @page :footer {
+        display:none;
+    }
+    @page :header {
+       display:none;
+    }    
+    @page:left{
+        @bottom-left {
+            content:"Page " counter(page) " of " counter(pages);
+        }
+    }
+    html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed .main{
+        margin-left:0;
+    }
+    .page-number{
+        content:counter(page)
+    }
+
+    h1 {
+        page-break-before:always;
+    }
+    h1, h2, h3, h4, h5 {
+        page-break-after:avoid;
+    }
+    table, figure {
+        page-break-inside:avoid;
+    }
+    header,
+    footer,
+    .footer,
+    nav,
+    .navbar,
+    .btn,
+    .sidebar,
+    .status,
+    .btn-status,
+    .card-header,
+    .page-title,
+    img,
+    .img,
+    .no-print
+    {
+        display:none;
+    }
+    .sheet{
+        display:block;
+        .w-50{
+            float:left;
+            width:50%;
+        }
+        table{
+            tr{
+                height:auto;
+                td{
+                    padding-left:8px
+                }
+            }
+        }   
+        .print_billship-summary{
+            overflow:hidden;
+            margin-top:10px;
+        } 
+    }
+    .ord_details-page{
+        .card-body{
+            padding:0;
+        }
+    }
+    .table > tbody{
+        font-size: 11px;
+    }
+    .table-bordered th, .table-bordered td{
+        border:1pt solid black!important;
+    }
+    .product-table th.img, .product-list td.img{
+        width:0;
+        display:none;
+    }
+    .ord_details-page .product-list tr td{
+        padding:3px 8px;
+    }
+    .ord_details-page .product-list .t-p-sec .table{
+        border: none;
+    }
+}

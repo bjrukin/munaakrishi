@@ -1,0 +1,2 @@
+<div class="global-strip">&nbsp;</div>
+<h1 class="logo" style="padding: 1em"> <a href="https://{{ env('APP_WEBSITE') }}" target="_blank"> <img height="auto" src="{{ asset('assets/email/logo.png') }}" alt=""> </a> </h1>

@@ -1,0 +1,1 @@
+<p id="back-top" style="display: block;"><a href="#top" aria-label="Back to top"><span></span></a></p>

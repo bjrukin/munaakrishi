@@ -79,9 +79,8 @@
     <div class="container hero-controls-inner">
       <div class="hero-tabs">
         @for($i = 0; $i < $slideCount; $i++)
-          <button type="button" class="hero-tab {{ $i === 0 ? 'active' : '' }}">
+          <button type="button" class="hero-tab {{ $i === 0 ? 'active' : '' }}" aria-label="Go to slide {{ $i + 1 }}">
             <span class="hero-tab-bar"><span class="hero-tab-progress"></span></span>
-            <span class="hero-tab-label">Highlight {{ $i + 1 }}</span>
           </button>
         @endfor
       </div>

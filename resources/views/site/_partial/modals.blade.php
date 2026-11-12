@@ -1,21 +1,24 @@
 @if($featured_notice ?? null)
+@php($noticeHasImage = filled(trim((string) ($featured_notice->image ?? ''))))
 <!-- Notice Popup Modal -->
-<div id="notice-popup" class="modal-backdrop notice-popup" role="dialog" aria-modal="true" aria-labelledby="notice-popup-title" aria-describedby="notice-popup-summary" data-notice-id="{{ $featured_notice->id }}" data-notice-version="{{ $featured_notice->updated_at->timestamp }}">
+<div id="notice-popup" class="modal-backdrop notice-popup" role="dialog" aria-modal="true" aria-labelledby="notice-popup-title" @unless($noticeHasImage) aria-describedby="notice-popup-summary" @endunless data-notice-id="{{ $featured_notice->id }}" data-notice-version="{{ $featured_notice->updated_at->timestamp }}">
   <article class="modal-dialog notice-popup-dialog">
     <button type="button" class="modal-close-btn" aria-label="Close notice">✕</button>
     <div class="notice-popup-heading">
       <span class="notice-popup-mark" aria-hidden="true">सूचना</span>
       <p>{{ \Carbon\Carbon::parse($featured_notice->date)->format('F d, Y') }}</p>
     </div>
-    @if($featured_notice->image)
-    <div class="notice-popup-image" style="margin: 0.75rem 0; overflow: hidden; border-radius: 8px;">
-      <img src="{{ $featured_notice->url_image }}" alt="{{ $featured_notice->name }}" loading="lazy" decoding="async" style="width: 100%; max-height: 280px; object-fit: cover; display: block;">
+    @if($noticeHasImage)
+    <div class="notice-popup-image">
+      <img src="{{ $featured_notice->url_image }}" alt="" loading="lazy" decoding="async">
     </div>
     @endif
     <div class="notice-popup-content">
       <h2 id="notice-popup-title">{{ $featured_notice->name }}</h2>
+      @unless($noticeHasImage)
       <p id="notice-popup-summary">{{ \Illuminate\Support\Str::limit(strip_tags($featured_notice->description), 220) }}</p>
-      <a class="btn btn-forest" href="{{ route('news.detail', \Illuminate\Support\Str::slug($featured_notice->name)) }}">Read full notice</a>
+      <a class="btn btn-forest" href="{{ route('news.detail', \Illuminate\Support\Str::slug($featured_notice->name)) }}">Read more</a>
+      @endunless
     </div>
   </article>
 </div>

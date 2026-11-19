@@ -1,5 +1,22 @@
 <script>
 $(document).ready(function() {
+    const outletCheckboxes = $('.outlet-checkbox');
+    const selectAllButton = $('[data-outlet-select-all]');
+
+    function updateSelectAllLabel() {
+        const allSelected = outletCheckboxes.length > 0 && outletCheckboxes.filter(':checked').length === outletCheckboxes.length;
+        selectAllButton.text(allSelected ? 'Clear all' : 'Select all');
+    }
+
+    selectAllButton.on('click', function() {
+        const allSelected = outletCheckboxes.filter(':checked').length === outletCheckboxes.length;
+        outletCheckboxes.prop('checked', !allSelected);
+        updateSelectAllLabel();
+    });
+
+    outletCheckboxes.on('change', updateSelectAllLabel);
+    updateSelectAllLabel();
+
     $("#form").submit(function(e) {
         e.preventDefault();
         $('.btn-loading').prop('disabled', true);

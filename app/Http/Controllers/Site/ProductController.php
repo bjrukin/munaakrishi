@@ -59,11 +59,11 @@ class ProductController extends Controller
             'price' => $productModel->price,
             'unit' => $productModel->unit ?? 'kg',
             'description' => $productModel->description ?? '',
-            'producer' => 'Munaa Krishi Partner Cooperative (' . ($productModel->district ?? 'Nepal') . ')',
+            'producer' => $productModel->grown_by ?? 'Munaa Krishi Partner Cooperative (' . ($productModel->district ?? 'Nepal') . ')',
             'producer_link' => route('farms'),
-            'pack_sizes' => 'Standard packaging in ' . ($productModel->unit ?? 'kg') . ' increments',
-            'storage' => 'Store in a cool, dry place away from direct sunlight.',
-            'details' => $productModel->description ?? 'Grown and collected adhering to sustainable agricultural standards and tested for quality assurance.',
+            'pack_sizes' => $productModel->pack_size ?? 'Standard packaging in ' . ($productModel->unit ?? 'kg') . ' increments',
+            'storage' => $productModel->storage ?? 'Store in a cool, dry place away from direct sunlight.',
+            'details' => $productModel->detail ?? $productModel->description ?? 'Grown and collected adhering to sustainable agricultural standards and tested for quality assurance.',
         ];
 
         $relatedModels = Product::where('status', 1)

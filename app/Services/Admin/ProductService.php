@@ -89,10 +89,15 @@ class ProductService
             $product->district = $request['district'] ?? null;
             $product->tag = $request['tag'] ?? null;
             $product->description = $request['description'] ?? null;
+            $product->detail = $request['detail'] ?? null;
+            $product->grown_by = $request['grown_by'] ?? null;
+            $product->storage = $request['storage'] ?? null;
+            $product->pack_size = $request['pack_size'] ?? null;
             $product->price = !empty($request['price']) ? $request['price'] : null;
             $product->unit = $request['unit'] ?? 'kg';
             $product->image = $image;
             $product->save();
+            $product->outlets()->sync($request['outlet_ids'] ?? []);
 
             $response['error'] = null;
             return response()->json($response, $response['status']);

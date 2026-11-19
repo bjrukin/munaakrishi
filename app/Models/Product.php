@@ -17,6 +17,10 @@ class Product extends Model
         'district',
         'tag',
         'description',
+        'detail',
+        'grown_by',
+        'storage',
+        'pack_size',
         'price',
         'unit',
         'image',
@@ -25,6 +29,11 @@ class Product extends Model
     ];
 
     protected $appends = ['url_image'];
+
+    public function outlets()
+    {
+        return $this->belongsToMany(Office::class);
+    }
 
     public function getUrlImageAttribute()
     {

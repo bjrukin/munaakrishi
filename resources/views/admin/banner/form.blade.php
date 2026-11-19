@@ -13,26 +13,21 @@
                                 <fieldset class="border rounded-3 p-3">
                                     <legend>{{$page_title}}</legend>
                                     <div class="mb-3">
+                                        <label class="form-label">Title</label>
+                                        <input type="text" name="name" class="form-control" value="{{ old('name',($row->name ?? '')) }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Sub Title</label>
+                                        <input type="text" name="sub_title" class="form-control" value="{{ old('sub_title',($row->sub_title ?? '')) }}">
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label">Page Name</label>
-                                        <select name="name" class="form-select">
-                                            <option value="Who we are" @if($row && $row->name == 'Who we are') selected
-                                                @endif>Who we are</option>
-                                            <option value="Leadership" @if($row && $row->name == 'Leadership') selected
-                                                @endif>Leadership</option>
-                                            <option value="Our Team" @if($row && $row->name == 'Our Team') selected
-                                                @endif>Our Team</option>
-                                            <option value="Production" @if($row && $row->name == 'Production') selected
-                                                @endif>Production</option>
-                                            <option value="Notification" @if($row && $row->name == 'Notification') selected
-                                                @endif>Notification</option>
-                                            <option value="Testimonial" @if($row && $row->name == 'Testimonial') selected
-                                                @endif>Testimonial</option>
-                                            <option value="Gallery" @if($row && $row->name == 'Gallery') selected
-                                                @endif>Gallery</option>
-                                            <option value="Career" @if($row && $row->name == 'Career') selected
-                                                @endif>Career</option>
-                                            <option value="Contact" @if($row && $row->name == 'Contact') selected
-                                                @endif>Contact</option>                                                
+                                        <select name="page_id" class="form-select">
+                                            @foreach($pages as $page)
+                                            <option value="{{ $page->id }}" @if($row && $row->page_id == $page->id) selected
+                                                @endif>{{ $page->name }}</option>
+                                            @endforeach
+                                                                                         
                                         </select>
                                     </div>
                                     <div class="mb-3">

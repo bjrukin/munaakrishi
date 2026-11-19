@@ -26,7 +26,7 @@ class HomeController extends Controller {
         // Settings lookup helper
         $sectionSettings = $sections->keyBy('type');
 
-        $data['banners'] = Banner::where('status', 1)->get();
+        $data['banners'] = Banner::where('status', 1)->where('page_id', 1)->get();
 
         $productLimit = min(4, max(1, (int) ($sectionSettings['products']->settings['limit'] ?? 4)));
         $data['featured_products'] = Product::where('status', 1)->orderBy('order', 'asc')->take($productLimit)->get();

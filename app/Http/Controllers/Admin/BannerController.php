@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Banner\StoreRequest;
 use App\Models\Banner;
+use App\Models\Page;
 use App\Services\Admin\BannerService;
 use Illuminate\Http\Request;
 
@@ -36,6 +37,7 @@ class BannerController extends Controller
     public function addEdit(Request $request)
     {
         $id = ($request->id) ? $request->id : 0;
+        $data['pages'] = Page::where('status', '1')->get();
         $data['nav'] = 'media';
         $data['sub_nav'] = 'banner';
         $data['page_title'] =  ($id == 0) ? "Add Banner" : "Edit Banner";

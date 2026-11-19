@@ -64,6 +64,8 @@ class BannerService {
                 $image = ($request['image']) ? $request['image'] : (($banner) ? $banner->image : null);
             }
             $banner->name = $request['name'];
+            $banner->sub_title = $request['sub_title'];
+            $banner->page_id = $request['page_id'];
             $banner->image = $image;
             $banner->save();
             $response['error'] = null;

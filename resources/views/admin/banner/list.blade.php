@@ -41,6 +41,8 @@
                             <tr>
                                 <th width="50">SN.</th>
                                 <th width="750">Image</th>
+                                <th>Title</th>
+                                <th>Sub Title</th>
                                 <th>Page</th>
                                 <th width="150">Action</th>
                             </tr>
@@ -49,8 +51,10 @@
                             @foreach($result['banners'] as $banner)
                             <tr>
                                 <td>{{ $result['count']++ }}</td>
-                                <td><img src="{{ $banner->url_image}}" ></td>
+                                <td><img src="{{ $banner->url_image}}" style="max-width:100px; max-height:100px" ></td>
                                 <td>{{ $banner->name}}</td>
+                                <td>{{ $banner->sub_title }}</td>
+                                <td>{{ $banner->page?->name }}</td>
                                 <td style="vertical-align:middle">
                                     <a href="{{route('admin.banner.addEdit', ['id'=>$banner->id])}}"> <span
                                             class="mat_sym-icon material-symbols-outlined">edit</span> </a>

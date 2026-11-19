@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
 use App\Models\Product;
+use App\Models\Office;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,8 @@ class ProductController extends Controller
         $data['sub_nav'] = 'product';
         $data['page_title'] = ($id == 0) ? 'Add Product' : 'Edit Product';
         $data['action'] = route('admin.product.store');
-        $data['row'] = Product::where('id', $id)->first();
+        $data['row'] = Product::with('outlets')->where('id', $id)->first();
+        $data['outlets'] = Office::where('status', 1)->orderBy('order')->orderBy('name')->get();
         return view('admin.product.form', $data);
     }
 

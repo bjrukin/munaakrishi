@@ -12,4 +12,9 @@ class Office extends Model
 	'phone', 
 	'order', 
 	'status', ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }

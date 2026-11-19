@@ -22,9 +22,15 @@ class StoreRequest extends RestRequest
             'district' => 'nullable|string|max:100',
             'tag' => 'nullable|string|max:100',
             'description' => 'nullable|string',
+            'detail' => 'nullable|string',
+            'grown_by' => 'nullable|string|max:255',
+            'storage' => 'nullable|string',
+            'pack_size' => 'nullable|string|max:100',
             'price' => 'nullable|numeric|min:0',
             'unit' => 'nullable|string|max:50',
             'image' => 'nullable',
+            'outlet_ids' => 'nullable|array',
+            'outlet_ids.*' => 'integer|distinct|exists:offices,id',
         ];
     }
 }

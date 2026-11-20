@@ -1,5 +1,5 @@
 <!-- Outlets Block (Dynamic from offices table) -->
-<section class="section-padding bg-white border-line-y" id="outlets-section">
+<section class="section-padding bg-white border-line-y contact-outlets-section" id="outlets-section">
   <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
       <div>
@@ -15,7 +15,7 @@
     @endphp
 
     @if(isset($outletList) && count($outletList) > 0)
-      <div style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="outlets-grid" style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
         @foreach($outletList as $idx => $outlet)
           <div style="background: var(--color-leaf-soft); border: 1px solid var(--color-line); border-left: 4px solid var(--color-forest); padding: 1.5rem; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>

@@ -1,7 +1,7 @@
 <!-- Quick Contact / Hotline Box -->
-<section class="section-padding bg-cream-deep border-line-y">
+<section class="section-padding bg-cream-deep border-line-y contact-support-section">
   <div class="container">
-    <div style="background: #ffffff; border: 1px solid var(--color-line); border-left: 6px solid var(--color-forest); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-sm);">
+    <div class="contact-support-card" style="background: #ffffff; border: 1px solid var(--color-line); border-left: 6px solid var(--color-forest); border-radius: var(--radius-md); padding: 2.5rem; box-shadow: var(--shadow-sm);">
       <div style="display: grid; gap: 2rem; align-items: center;" class="lg-grid-2col">
         <div>
           <p class="section-label">{{ $settings['subtitle'] ?? 'Reach Munaa Krishi' }}</p>

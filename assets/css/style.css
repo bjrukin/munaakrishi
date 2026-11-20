@@ -2677,6 +2677,17 @@ textarea:focus {
   grid-template-columns: 1fr;
 }
 
+/* Keep every Contact page band attached to the viewport. This also prevents
+   flex/grid content from shrinking the banner and CMS blocks to min-content. */
+.contact-page main,
+.contact-page main > section,
+.contact-page > .notice-bar {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  align-self: stretch;
+}
+
 @media (min-width: 1024px) {
   .contact-layout {
     grid-template-columns: 0.72fr 1.28fr;
@@ -2777,6 +2788,61 @@ textarea:focus {
 .contact-tab-btn.active {
   color: var(--color-forest);
   border-bottom-color: var(--color-forest);
+}
+
+@media (max-width: 767px) {
+  .contact-page .page-banner,
+  .contact-page .contact-support-section,
+  .contact-page .contact-outlets-section {
+    width: 100%;
+    max-width: none;
+  }
+
+  .contact-page .section-padding {
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
+  }
+
+  .contact-page .contact-layout {
+    gap: 2rem;
+  }
+
+  .contact-page .contact-card {
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .contact-page .contact-tabs-nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0;
+    overflow: visible;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-page .contact-tab-btn {
+    min-width: 0;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .contact-page .contact-support-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  .contact-page .outlets-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .contact-page .form-control,
+  .contact-page textarea,
+  .contact-page select {
+    max-width: 100%;
+    min-width: 0;
+  }
 }
 
 .contact-faq-section {

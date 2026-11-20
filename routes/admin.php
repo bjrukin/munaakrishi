@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\GeneralsettingController;
 use App\Http\Controllers\Admin\HistoryController;
+use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LeadershipController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\OfficeController;
@@ -34,6 +35,11 @@ Route::post('save-password', [AuthController::class, 'savePassword'])->name('adm
 Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/ckeditor', [CkeditorController::class, 'uploadImage'])->name('ckeditor.upload');
+
+    Route::prefix('inquiry')->group(function () {
+        Route::get('/', [InquiryController::class, 'index'])->name('admin.inquiry');
+        Route::get('/{inquiry}', [InquiryController::class, 'show'])->name('admin.inquiry.show');
+    });
 
     Route::prefix('account')->group(function () {
         Route::get('/', [AccountController::class, 'index'])->name('admin.account.setting');

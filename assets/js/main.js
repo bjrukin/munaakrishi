@@ -708,7 +708,7 @@ function initForms() {
   // General Inquiry Contact Form
   const contactForm = document.querySelector('#general-inquiry-form');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       let hasError = false;
 
@@ -759,7 +759,15 @@ function initForms() {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `Sending...`;
 
-      setTimeout(() => {
+      try {
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        const data = await response.json();
+        if (!response.ok) throw data;
+
         contactForm.innerHTML = `
           <div style="background-color: var(--color-leaf-soft); padding: 2.5rem; text-align: center;">
             <svg style="width: 48px; height: 48px; color: var(--color-forest); margin: 0 auto;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -771,7 +779,16 @@ function initForms() {
             <button type="button" class="btn btn-forest" style="margin-top: 1.5rem;" onclick="window.location.reload()">Send another message</button>
           </div>
         `;
-      }, 800);
+      } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        const errors = error.errors || {};
+        Object.entries(errors).forEach(([field, messages]) => {
+          const input = contactForm.querySelector(`[name="${field}"]`);
+          if (input) showError(input, messages[0]);
+        });
+        if (!error.errors) alert('We could not send your message. Please try again.');
+      }
     });
   }
 
@@ -800,16 +817,8 @@ function initForms() {
   document.querySelectorAll('.crop-pill-label').forEach(label => {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox) {
-      label.addEventListener('click', (e) => {
-        // Prevent default double triggering if clicking input vs label
-        if (e.target !== checkbox) {
-          checkbox.checked = !checkbox.checked;
-        }
-        if (checkbox.checked) {
-          label.classList.add('selected');
-        } else {
-          label.classList.remove('selected');
-        }
+      checkbox.addEventListener('change', () => {
+        label.classList.toggle('selected', checkbox.checked);
       });
     }
   });
@@ -830,7 +839,7 @@ function initForms() {
   // Farmer Onboarding Form
   const farmerForm = document.querySelector('#farmer-onboarding-form');
   if (farmerForm) {
-    farmerForm.addEventListener('submit', (e) => {
+    farmerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       let hasError = false;
 
@@ -894,11 +903,20 @@ function initForms() {
       if (hasError) return;
 
       const submitBtn = farmerForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = `Submitting application...`;
 
       const firstName = nameInput.value.trim().split(' ')[0] || 'Farmer';
-      setTimeout(() => {
+      try {
+        const response = await fetch(farmerForm.action, {
+          method: 'POST',
+          body: new FormData(farmerForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        const data = await response.json();
+        if (!response.ok) throw data;
+
         farmerForm.innerHTML = `
           <div style="background-color: var(--color-leaf-soft); padding: 2.5rem; text-align: center;">
             <svg style="width: 48px; height: 48px; color: var(--color-forest); margin: 0 auto;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -912,7 +930,16 @@ function initForms() {
             <button type="button" class="btn btn-forest" style="margin-top: 1.5rem;" onclick="window.location.reload()">Submit another application</button>
           </div>
         `;
-      }, 800);
+      } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        const errors = error.errors || {};
+        Object.entries(errors).forEach(([field, messages]) => {
+          const input = farmerForm.querySelector(`[name="${field}"], [name="${field}[]"]`);
+          if (input) showError(input, messages[0]);
+        });
+        if (!error.errors) alert('We could not submit your application. Please try again.');
+      }
     });
   }
 

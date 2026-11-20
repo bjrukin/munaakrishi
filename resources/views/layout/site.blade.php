@@ -27,7 +27,7 @@
     <script src="{{ asset('assets/js/data.js') }}"></script>
     <script type="module" src="{{ asset('assets/js/lazy-images.js') }}"></script>
     <script type="module" src="{{ asset('assets/js/notice-popup.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') . '?v=' . filemtime(base_path('assets/js/main.js')) }}"></script>
     @stack('scripts')
 </body>
 </html>

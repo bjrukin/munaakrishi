@@ -17,6 +17,7 @@ class StoreRequest extends RestRequest
             'id' => 'integer|nullable',
             'question' => 'required|string|max:500',
             'nepali_question' => 'nullable|string|max:500',
+            'category' => 'nullable|string|max:100',
             'answer' => 'required|string',
         ];
     }

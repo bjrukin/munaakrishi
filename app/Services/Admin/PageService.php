@@ -71,10 +71,61 @@ class PageService
             $page->name = $request['name'];
             $page->slug = $slug;
             $page->image = $image;
-            $page->description = $request['description'];
+            $page->description = $request['description'] ?? null;
+            if (isset($request['blocks'])) {
+                $rawBlocks = is_array($request['blocks']) ? $request['blocks'] : (json_decode($request['blocks'], true) ?: []);
+                $processedBlocks = [];
+
+                foreach ($rawBlocks as $b) {
+                    $bType = $b['type'] ?? 'rich_content';
+                    $bData = $b['data'] ?? [];
+
+                    // Process image upload if base64
+                    if (!empty($bData['image']) && preg_match('#^data:image.*?base64,#', $bData['image'])) {
+                        $bData['image'] = $this->StoreBase64Image(
+                            $bData['image'],
+                            '/page/',
+                            'blk_' . $slug . '_' . $bType . '_' . time() . '_' . Str::random(4)
+                        );
+                    }
+
+                    // Process secondary image if present (e.g. background image)
+                    if (!empty($bData['bg_image']) && preg_match('#^data:image.*?base64,#', $bData['bg_image'])) {
+                        $bData['bg_image'] = $this->StoreBase64Image(
+                            $bData['bg_image'],
+                            '/page/',
+                            'bg_' . $slug . '_' . $bType . '_' . time() . '_' . Str::random(4)
+                        );
+                    }
+
+                    // Normalize repeater items if array
+                    if (isset($bData['items']) && is_array($bData['items'])) {
+                        $bData['items'] = array_values(array_filter(array_map('trim', $bData['items']), fn($i) => $i !== ''));
+                    }
+
+                    $processedBlocks[] = [
+                        'type' => $bType,
+                        'is_enabled' => !empty($b['is_enabled']),
+                        'data' => $bData,
+                    ];
+                }
+
+                $page->blocks = $processedBlocks;
+            }
             $page->meta_title = ($request['meta_title']) ? $request['meta_title'] : $request['name'];
             $page->meta_description = ($request['meta_description']) ? $request['meta_description'] : Str::limit(strip_tags($request['description']), 200, '');
             $page->save();
+
+            // Keep munaa_krishi database synchronized if present
+            try {
+                \Illuminate\Support\Facades\DB::statement(
+                    "UPDATE `munaa_krishi`.`pages` SET `blocks` = ?, `updated_at` = NOW() WHERE `id` = ? OR `slug` = ?",
+                    [json_encode($page->blocks), $page->id, $page->slug]
+                );
+            } catch (\Throwable $t) {
+                // Secondary database synchronization is optional
+            }
+
             return response()->json($response, $response['status']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);

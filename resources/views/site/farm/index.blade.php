@@ -5,15 +5,19 @@
 @section('content')
   @php
     $farms = $farms ?? [];
+    $farmBlock = $farmBlock ?? ($page ? $page->getBlock('farms') : null);
+    $bgImg = !empty($farmBlock['image'])
+      ? ((str_starts_with($farmBlock['image'], 'http') || str_starts_with($farmBlock['image'], 'assets/')) ? asset($farmBlock['image']) : asset('storage/uploads/page/' . $farmBlock['image']))
+      : asset('assets/images/farms/nepal-terrace-farm.jpg');
   @endphp
   @include('site._partial.ticker')
 
   <main class="farms-directory-page">
     @include('site._partial.breadcrumb', [
-      'title' => 'The farms behind your food',
+      'title' => $farmBlock['title'] ?? 'The farms behind your food',
       'nepali_title' => 'उत्पादन स्रोत',
-      'subtitle' => 'The cooperatives and smallholder farms behind Munaa produce.',
-      'bg_image' => 'assets/images/farms/nepal-terrace-farm.jpg',
+      'subtitle' => $farmBlock['copy'] ?? 'The cooperatives and smallholder farms behind Munaa produce.',
+      'bg_image' => $bgImg,
       'breadcrumbs' => ['Farmer Origin' => '']
     ])
 
@@ -31,13 +35,13 @@
           <div class="farm-province-wrap">
             <select id="farm-province-select" class="farm-province-select">
               <option value="all">All provinces</option>
+              <option value="Koshi Province">Koshi Province</option>
+              <option value="Madhesh Province">Madhesh Province</option>
               <option value="Bagmati Province">Bagmati Province</option>
               <option value="Gandaki Province">Gandaki Province</option>
-              <option value="Karnali Province">Karnali Province</option>
-              <option value="Koshi Province">Koshi Province</option>
               <option value="Lumbini Province">Lumbini Province</option>
+              <option value="Karnali Province">Karnali Province</option>
               <option value="Sudurpashchim Province">Sudurpashchim Province</option>
-              <option value="Madhesh Province">Madhesh Province</option>
             </select>
           </div>
         </div>

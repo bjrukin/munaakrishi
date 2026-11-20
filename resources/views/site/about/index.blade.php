@@ -1,150 +1,77 @@
 @extends('layout.site')
 
+@section('body_class', 'about-page')
+
 @section('content')
   @include('site._partial.ticker')
 
-  <main>
+  @php
+    $aboutBanner = ($banner && !empty($banner->url_image)) ? $banner->url_image : asset('assets/images/farms/tea-field.jpg');
+    $pageBlocks = ($page && is_array($page->blocks) && count($page->blocks)) ? $page->blocks : null;
+  @endphp
+
+  <main class="about-page">
     @include('site._partial.breadcrumb', [
-      'title' => 'About Munaa Krishi',
+      'title' => $page->name ?? 'About Munaa Krishi',
       'nepali_title' => 'मुना कृषि लिमिटेड',
       'subtitle' => 'A mutual undertaking between NRNA and the Government of Nepal.',
-      'bg_image' => 'assets/images/farms/tea-field.jpg',
+      'bg_image' => $aboutBanner,
       'breadcrumbs' => ['About Us' => '']
     ])
 
-    <!-- Who We Are -->
-    <section class="section-padding">
-      <div class="container">
-        <div style="display: grid; gap: 3rem;" class="lg-grid-about">
-          <div>
-            <p class="section-label">Who we are</p>
-            <h2 class="section-title">Building a trusted national agricultural brand</h2>
-            <p style="margin-top: 1rem; font-weight: 700; color: var(--color-forest); font-size: 0.95rem;">Registered under the Companies Act of Nepal · Regd. No. 232466/076/077</p>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1.25rem; font-size: 1.05rem; line-height: 1.8; color: var(--color-muted);">
-            <p>Munaa Krishi Limited is a social enterprise and agribusiness initiative jointly envisioned by the Non-Resident Nepali Association (NRNA) and the Government of Nepal to transform Nepal's subsistence agriculture into a modern, commercially viable, and sustainable agricultural system. The company is registered under the Companies Act of Nepal, Regd. No. 232466/076/077, introducing technologies tested around the world.</p>
-            <p>The company aims to establish an integrated agricultural value chain by collecting, processing, branding, and marketing agricultural products under the munaa brand. It seeks to bridge the gap between producers and consumers, ensure fair prices and reliable markets for farmers, provide consumers with safe and high-quality food at affordable prices, reduce post-harvest losses, strengthen Nepal’s agricultural economy, and promote high-value agricultural products in national and international markets.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    @if(!empty($pageBlocks))
+      {{-- Modular Block-Based Architecture Rendering --}}
+      @include('site._partial.render_blocks', ['blocks' => $pageBlocks])
+    @else
+      {{-- Fallback default layout using About record if blocks not seeded --}}
+      @php
+        $whoWeAre = [
+          'label' => $about->who_we_are_label ?? 'Who we are',
+          'title' => $about->who_we_are_title ?? 'Building a trusted national agricultural brand',
+          'reg_info' => $about->who_we_are_reg_info ?? 'Registered under the Companies Act of Nepal · Regd. No. 232466/076/077',
+          'content' => $about->who_we_are_content ?? null,
+          'image' => $about->who_we_are_image ?? null,
+        ];
+        $visionMission = [
+          'vision_title' => $about->vision_title ?? 'Vision',
+          'vision_content' => $about->vision_content ?? null,
+          'mission_title' => $about->mission_title ?? 'Mission',
+          'mission_content' => $about->mission_content ?? null,
+        ];
+        $orgStructure = [
+          'label' => $about->org_structure_label ?? 'Governance & Team',
+          'title' => $about->org_structure_title ?? 'Organizational structure',
+          'subtitle' => $about->org_structure_subtitle ?? 'From the Board of Directors and Advisory Committees down to operations, regional logistics and department leads.',
+          'image' => $about->org_structure_image ?? null,
+          'caption' => $about->org_structure_caption ?? 'Scroll horizontally to view the full organizational structure of Munaa Krishi Limited.',
+        ];
+        $aimsData = [
+          'label' => $about->aims_label ?? 'Objectives',
+          'title' => $about->aims_title ?? 'What Munaa Krishi aims to achieve',
+          'items' => $about->aims_content ?? [],
+        ];
+        $implementationData = [
+          'label' => $about->implementation_label ?? 'Implementation',
+          'title' => $about->implementation_title ?? 'Implementation strategies',
+          'items' => $about->implementation_content ?? [],
+        ];
+        $investorsData = [
+          'label' => $about->investment_label ?? 'Investment opportunities',
+          'title' => $about->investment_title ?? 'Who can invest',
+          'items' => $about->investment_content ?? [],
+        ];
+      @endphp
 
-    <!-- Vision & Mission -->
-    <section class="section-padding bg-leaf-soft border-line-y">
-      <div class="container">
-        <div style="display: grid; gap: 2rem;" class="md-grid-2col">
-          <div style="background: #ffffff; padding: 2.25rem; box-shadow: var(--shadow-sm); border: 1px solid var(--color-line);">
-            <div style="color: var(--color-sindoor);">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            </div>
-            <h2 style="margin-top: 1rem; font-size: 1.65rem; font-weight: 800; color: var(--color-forest);">Vision</h2>
-            <p style="margin-top: 0.75rem; font-size: 1.05rem; line-height: 1.75; color: var(--color-muted);">
-              To be Nepal's leading integrated and trusted agribusiness company, contribute to Nepal's agricultural transformation and the Sustainable Development Goals (SDGs), and ensure every consumer has access to safe, fresh, healthy, and affordable agricultural products.
-            </p>
-          </div>
+      @include('site.home.sections.who_we_are', ['settings' => $whoWeAre])
+      @include('site.home.sections.vision_mission', ['settings' => $visionMission])
+      @include('site.home.sections.org_structure', ['settings' => $orgStructure])
+      @include('site.home.sections.aims_to_achieve', ['settings' => $aimsData])
+      @include('site.home.sections.implementation', ['settings' => $implementationData])
+      @include('site.home.sections.who_can_invest', ['settings' => $investorsData])
+    @endif
 
-          <div style="background: #ffffff; padding: 2.25rem; box-shadow: var(--shadow-sm); border: 1px solid var(--color-line);">
-            <div style="color: var(--color-sindoor);">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-            </div>
-            <h2 style="margin-top: 1rem; font-size: 1.65rem; font-weight: 800; color: var(--color-forest);">Mission</h2>
-            <p style="margin-top: 0.75rem; font-size: 1.05rem; line-height: 1.75; color: var(--color-muted);">
-              To empower farmers and transform Nepal's agriculture by delivering innovative, sustainable, and market-driven agribusiness solutions through strategic partnerships and global collaboration.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Organizational Structure Chart -->
-    <section class="section-padding bg-cream-deep border-line-b" aria-labelledby="org-chart-title">
-      <div class="container">
-        <p class="section-label" style="text-align: center;">Governance & Team</p>
-        <h2 id="org-chart-title" class="section-title" style="text-align: center; margin-left: auto; margin-right: auto;">Organizational structure</h2>
-        <p class="section-copy" style="text-align: center; margin-left: auto; margin-right: auto; margin-bottom: 2.5rem;">
-          From the Board of Directors and Advisory Committees down to operations, regional logistics and department leads.
-        </p>
-
-        <figure style="background: #ffffff; border: 1px solid var(--color-line); overflow: hidden; box-shadow: var(--shadow-sm);">
-          <div style="overflow-x: auto; padding: 1.5rem;" tabindex="0" aria-label="Scrollable organization chart">
-            <img loading="lazy" decoding="async" src="{{ asset('assets/images/about/organization-chart.svg') }}" alt="Munaa Krishi organizational structure chart" width="1442" height="1060" style="min-width: 780px; width: 100%; height: auto;">
-          </div>
-          <figcaption style="border-top: 1px solid var(--color-line); padding: 0.75rem 1.25rem; font-size: 0.85rem; color: var(--color-muted); text-align: center;">
-            Scroll horizontally to view the full organizational structure of Munaa Krishi Limited.
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Objectives -->
-    <section class="section-padding">
-      <div class="container">
-        <div>
-          <p class="section-label">Objectives</p>
-          <h2 class="section-title">What Munaa Krishi aims to achieve</h2>
-        </div>
-
-        <ol style="margin-top: 2.5rem; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); list-style: none; padding: 0;">
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">01</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Promote sustainable agricultural development in collaboration with NRNs, government agencies, local governments, farmers, cooperatives, and other stakeholders.</span>
-          </li>
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">02</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Promote organic, scientific, and climate-smart agriculture through research, innovation, training, and extension services.</span>
-          </li>
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">03</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Engage in the production, processing, storage, distribution, import, export, and marketing of agricultural and livestock products.</span>
-          </li>
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">04</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Strengthen farmers through capacity building, market access, value chain development, and good agricultural practices.</span>
-          </li>
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">05</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Contribute to employment generation, food security, sustainable economic development, and the growth of Nepal’s agricultural sector.</span>
-          </li>
-          <li style="display: grid; grid-template-columns: 50px 1fr; gap: 1rem; align-items: baseline; padding: 1.35rem 0;">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 1.1rem;">06</span>
-            <span style="font-size: 1.08rem; line-height: 1.7; color: var(--color-ink);">Develop a trusted national agricultural brand.</span>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- Implementation & Investment Opportunities -->
-    <section class="section-padding bg-white border-line-y">
-      <div class="container">
-        <div style="display: grid; gap: 3.5rem;" class="md-grid-2col">
-          <div>
-            <p class="section-label">Implementation</p>
-            <h2 class="section-title">Implementation strategies</h2>
-            <ul style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; font-size: 1.05rem; line-height: 1.75; color: var(--color-muted); list-style: disc; padding-left: 1.25rem;">
-              <li>Expand progressively to major cities throughout Nepal.</li>
-              <li>Collaborate with relevant government agencies for certification, quality regulation, and branding.</li>
-              <li>Coordinate with three tiers of government for land, infrastructure, insurance, and policy support.</li>
-            </ul>
-          </div>
-
-          <div>
-            <p class="section-label">Investment opportunities</p>
-            <h2 class="section-title">Who can invest</h2>
-            <ul style="margin-top: 1.5rem; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); list-style: none; padding: 0;">
-              <li style="padding: 0.85rem 0; border-bottom: 1px solid var(--color-line); font-weight: 700; color: var(--color-forest);">Non-Resident Nepalis (NRNs)</li>
-              <li style="padding: 0.85rem 0; border-bottom: 1px solid var(--color-line); font-weight: 700; color: var(--color-forest);">Nepali entrepreneurs</li>
-              <li style="padding: 0.85rem 0; border-bottom: 1px solid var(--color-line); font-weight: 700; color: var(--color-forest);">Farmers and farmer cooperatives</li>
-              <li style="padding: 0.85rem 0; border-bottom: 1px solid var(--color-line); font-weight: 700; color: var(--color-forest);">Financial institutions</li>
-              <li style="padding: 0.85rem 0; border-bottom: 1px solid var(--color-line); font-weight: 700; color: var(--color-forest);">Development partners</li>
-              <li style="padding: 0.85rem 0; font-weight: 700; color: var(--color-forest);">Other interested institutional and individual investors</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    @if(isset($histories) && $histories->isNotEmpty())
-    <!-- Our Journey / History -->
+    {{-- Optional Milestone Timeline / History if present and not included as block --}}
+    @if(isset($histories) && $histories->isNotEmpty() && (!$pageBlocks || !collect($pageBlocks)->contains('type', 'history')))
     <section class="section-padding bg-leaf-soft border-line-b">
       <div class="container">
         <div>
@@ -167,8 +94,8 @@
     </section>
     @endif
 
-    @if(isset($achievements) && $achievements->isNotEmpty())
-    <!-- Key Achievements -->
+    {{-- Optional Key Achievements if present and not included as block --}}
+    @if(isset($achievements) && $achievements->isNotEmpty() && (!$pageBlocks || !collect($pageBlocks)->contains('type', 'achievements')))
     <section class="section-padding">
       <div class="container">
         <div>
@@ -189,8 +116,5 @@
       </div>
     </section>
     @endif
-
-    {{-- Dynamic Admin-Configured Components for About Page --}}
-    @include('site._partial.dynamic_sections', ['page' => 'about'])
   </main>
 @endsection

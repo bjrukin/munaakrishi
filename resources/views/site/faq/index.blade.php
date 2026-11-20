@@ -5,15 +5,29 @@
 @section('content')
   @php
     $faqs = $faqs ?? [];
+    $fb = $faqBlock ?? [];
+    $cb = $ctaBlock ?? [];
+
+    $heroTitle = $fb['title'] ?? 'Frequently Asked Questions';
+    $heroSubtitle = $fb['copy'] ?? 'Helpful information about products, farmer partnerships, outlets and enquiries.';
+    $heroBg = !empty($fb['image'])
+      ? (str_starts_with($fb['image'], 'http') || str_starts_with($fb['image'], 'assets/')
+          ? asset($fb['image'])
+          : asset('storage/uploads/page/' . $fb['image']))
+      : asset('assets/images/farms/tea-field.jpg');
+
+    $sectionLabel = $fb['subtitle'] ?? 'Help Center';
+    $sectionTitle = $fb['title'] ?? 'Answers to common questions';
+    $sectionCopy = $fb['copy'] ?? 'Find answers about how we source from local farms, our retail outlets, organic certifications, and wholesale partnerships.';
   @endphp
   @include('site._partial.ticker')
 
   <main>
     @include('site._partial.breadcrumb', [
-      'title' => 'Frequently Asked Questions',
+      'title' => $heroTitle,
       'nepali_title' => 'प्राय सोधिने प्रश्नहरू',
-      'subtitle' => 'Helpful information about products, farmer partnerships, outlets and enquiries.',
-      'bg_image' => 'assets/images/farms/tea-field.jpg',
+      'subtitle' => $heroSubtitle,
+      'bg_image' => $heroBg,
       'breadcrumbs' => ['FAQ' => '']
     ])
 
@@ -21,10 +35,10 @@
       <div class="container container-narrow">
         <!-- Section Title & Intro -->
         <div style="text-align: center; margin-bottom: 2rem;">
-          <p class="section-label">Help Center</p>
-          <h2 class="section-title" style="margin-left: auto; margin-right: auto;">Answers to common questions</h2>
+          <p class="section-label">{{ $sectionLabel }}</p>
+          <h2 class="section-title" style="margin-left: auto; margin-right: auto;">{{ $sectionTitle }}</h2>
           <p class="section-copy" style="margin-left: auto; margin-right: auto; font-size: 1.05rem;">
-            Find answers about how we source from local farms, our retail outlets, organic certifications, and wholesale partnerships.
+            {{ $sectionCopy }}
           </p>
         </div>
 
@@ -46,7 +60,7 @@
         <div class="accordion" id="faq-accordion-list">
           @if(isset($faqs) && count($faqs) > 0)
             @foreach($faqs as $idx => $faq)
-              <div class="accordion-item {{ $idx === 0 ? 'open' : '' }}" data-faq-category="products" data-faq-text="{{ strtolower($faq->question . ' ' . $faq->answer) }}">
+              <div class="accordion-item {{ $idx === 0 ? 'open' : '' }}" data-faq-category="{{ $faq->category ?? 'products' }}" data-faq-text="{{ strtolower($faq->question . ' ' . $faq->answer . ' ' . ($faq->nepali_question ?? '')) }}">
                 <button type="button" class="accordion-header" aria-expanded="{{ $idx === 0 ? 'true' : 'false' }}">
                   <span>{{ $faq->question }}</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -139,13 +153,24 @@
           @endif
         </div>
 
-        <div style="margin-top: 3.5rem; background: var(--color-leaf-soft); border-left: 4px solid var(--color-forest); padding: 2rem; border-radius: 4px; text-align: center;">
-          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--color-forest);">Still have a question?</h3>
-          <p style="margin-top: 0.35rem; font-size: 0.98rem; color: var(--color-muted);">We are here to help farmers, consumers and institutional partners.</p>
-          <a href="{{ route('contact') }}" class="btn btn-forest" style="margin-top: 1rem;">
-            Contact our team
-          </a>
-        </div>
+        <!-- Callout Box Block -->
+        @if($cb === null || ($cb['is_enabled'] ?? true))
+          @php
+            $calloutTitle = $cb['title'] ?? 'Still have a question?';
+            $calloutCopy = $cb['copy'] ?? 'We are here to help farmers, consumers and institutional partners.';
+            $calloutBtnText = $cb['btn_text'] ?? 'Contact our team';
+            $calloutBtnLink = $cb['btn_link'] ?? route('contact');
+          @endphp
+          <div style="margin-top: 3.5rem; background: var(--color-leaf-soft); border-left: 4px solid var(--color-forest); padding: 2rem; border-radius: 4px; text-align: center;">
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--color-forest);">{{ $calloutTitle }}</h3>
+            <p style="margin-top: 0.35rem; font-size: 0.98rem; color: var(--color-muted);">{{ $calloutCopy }}</p>
+            @if(!empty($calloutBtnText))
+              <a href="{{ $calloutBtnLink }}" class="btn btn-forest" style="margin-top: 1rem;">
+                {{ $calloutBtnText }}
+              </a>
+            @endif
+          </div>
+        @endif
       </div>
     </section>
   </main>

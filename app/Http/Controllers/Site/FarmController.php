@@ -13,9 +13,18 @@ class FarmController extends Controller
     {
         $data['nav'] = 'farms';
         $data['metahead'] = 'seo';
-        $data['page_title'] = 'Partner Farms';
 
-        $dbFarms = Farm::where('status', 1)->orderBy('order', 'asc')->get();
+        $page = \App\Models\Page::where('slug', 'farmer-origin')->first();
+        $data['page'] = $page;
+        $farmBlock = $page ? $page->getBlock('farms') : null;
+        $data['farmBlock'] = $farmBlock;
+        $data['page_title'] = $farmBlock['title'] ?? ($page->meta_title ?? 'The farms behind your food');
+
+        $query = Farm::where('status', 1)->orderBy('order', 'asc');
+        if (!empty($farmBlock['limit']) && is_numeric($farmBlock['limit']) && (int)$farmBlock['limit'] > 0) {
+            $query->take((int)$farmBlock['limit']);
+        }
+        $dbFarms = $query->get();
 
         $data['farms'] = $dbFarms->map(function ($f) {
             return [

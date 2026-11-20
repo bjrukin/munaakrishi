@@ -20,8 +20,20 @@
     <section class="section-padding">
       <div class="container">
         <div>
-          <p class="section-label">Product catalogue</p>
-          <h2 class="section-title">Products from farms across Nepal</h2>
+          <p class="section-label">{{ $productBlock['subtitle'] ?? 'Full Catalogue' }}</p>
+          <h2 class="section-title">{{ $productBlock['title'] ?? 'Explore Indigenous & Organic Crops' }}</h2>
+          @if(!empty($productBlock['copy']))
+            <p class="section-copy" style="margin-top: 0.5rem; font-size: 1.05rem; color: var(--color-muted);">{{ $productBlock['copy'] }}</p>
+          @endif
+          @if(!empty($productBlock['image']))
+            <div class="product-block-banner my-3" style="border-radius: 12px; overflow: hidden; max-height: 280px;">
+              @php
+                $pbImg = $productBlock['image'];
+                $pbImgUrl = (str_starts_with($pbImg, 'http') || str_starts_with($pbImg, 'assets/')) ? asset($pbImg) : asset('storage/uploads/page/' . $pbImg);
+              @endphp
+              <img src="{{ $pbImgUrl }}" alt="{{ $productBlock['title'] ?? 'Products' }}" style="width: 100%; height: 100%; max-height: 280px; object-fit: cover;">
+            </div>
+          @endif
         </div>
 
         <!-- Category Filters -->

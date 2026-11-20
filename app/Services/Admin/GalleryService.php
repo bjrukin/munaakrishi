@@ -139,8 +139,11 @@ class GalleryService {
             }
             $gallery_image = new GalleryImage;
             $gallery_image->gallery_id = $gallery_id;
-            $gallery_image->image = $image;
-            $gallery_image->order = $gallery->images->count() + 1;
+            $gallery_image->image      = $image;
+            $gallery_image->name       = $request['name'] ?? null;
+            $gallery_image->category   = $request['category'] ?? 'harvest';
+            $gallery_image->location   = $request['location'] ?? null;
+            $gallery_image->order      = $gallery->images->count() + 1;
             $gallery_image->save();
             $response['message'] = 'Image added.';
             $response['error'] = false;

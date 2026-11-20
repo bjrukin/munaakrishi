@@ -7,8 +7,21 @@
         <h2 class="section-title">{{ $settings['title'] ?? 'Products from farms across Nepal' }}</h2>
         <p class="section-copy">{{ $settings['copy'] ?? 'Directly sourced from farmer groups with transparent grading and guaranteed quality.' }}</p>
       </div>
-      <a href="{{ route('products') }}" class="btn btn-outline-forest">All products →</a>
+      <a href="{{ $settings['btn_link'] ?? route('products') }}" class="btn btn-outline-forest">
+        {{ $settings['btn_text'] ?? 'All products →' }}
+      </a>
     </div>
+
+    @if(!empty($settings['image']))
+      @php
+        $pBannerImg = (str_starts_with($settings['image'], 'http') || str_starts_with($settings['image'], 'assets/'))
+          ? asset($settings['image'])
+          : asset('storage/uploads/page/' . $settings['image']);
+      @endphp
+      <div style="margin: 1.5rem 0; border-radius: var(--radius-md, 8px); overflow: hidden; max-height: 240px;">
+        <img src="{{ $pBannerImg }}" alt="{{ $settings['title'] ?? 'Products' }}" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    @endif
 
     @php
       $homeProducts = isset($featured_products) && $featured_products->isNotEmpty()
@@ -25,7 +38,7 @@
       <div class="card-marquee-track">
       @foreach([false, true] as $isDuplicate)
         <div class="product-grid home-product-grid card-marquee-set" @if($isDuplicate) aria-hidden="true" inert @endif>
-        @foreach($homeProducts->take(4) as $product)
+        @foreach($homeProducts->take(8) as $product)
         @php
           $category = data_get($product, 'category', 'farm-products');
           $categoryLabel = [
@@ -60,8 +73,8 @@
                   {{ data_get($product, 'district', 'Nepal') }}
                 </span>
                 <span>
-                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 10v10h16V10M3 10l2-6h14l2 6M3 10c0 2 3 3 4.5 0 0 2 3 3 4.5 0 0 2 3 3 4.5 0 0 2 3 2 4.5 0M9 20v-5h6v5"/></svg>
-                  {{ $outletCount }} {{ Str::plural('outlet', $outletCount) }}
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  {{ $outletCount }} outlets
                 </span>
               </div>
             </div>

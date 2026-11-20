@@ -46,9 +46,13 @@ trait StoreImageTrait {
     public function StoreBase64Image($file, $folder, $file_name, $disk = 'public') {
         $mime = substr($file, 5, strpos($file, ';') - 5);
         $extension = explode('/', $mime)[1];
-        $filename = $file_name . '.webp';
-        if ($extension == 'svg') {
-            $base64_string = str_replace('data:image/svg+xml;base64', '', $file);
+        if (str_contains($extension, '+')) {
+            $extension = explode('+', $extension)[0];
+        }
+        $isSvg = ($extension == 'svg' || str_contains($mime, 'svg'));
+        $filename = $file_name . ($isSvg ? '.svg' : '.webp');
+        if ($isSvg) {
+            $base64_string = substr($file, strpos($file, ',') + 1);
             $image = base64_decode($base64_string);
         } else {
             $image = Image::make($file)->encode('webp', 90);

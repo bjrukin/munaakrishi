@@ -40,6 +40,16 @@
                                         <input type="text" class="form-control" name="phone"
                                             value="{{old('phone' , isset($row->phone)? $row->phone : '' )}}">
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label"> Google Location / Maps Link</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-map-marker-alt text-danger"></i></span>
+                                            <input type="text" class="form-control" name="google_map"
+                                                placeholder="e.g. https://maps.app.goo.gl/... or https://maps.google.com/?q=..."
+                                                value="{{old('google_map' , isset($row->google_map)? $row->google_map : '' )}}">
+                                        </div>
+                                        <small class="text-muted">Paste Google Maps share link, location URL, embed code, or coordinates for this outlet.</small>
+                                    </div>
                                 </fieldset>
                                 <div class="mt-3"> <button type="submit"
                                         class="main_btn btn-loading mb-3">Submit</button></div>

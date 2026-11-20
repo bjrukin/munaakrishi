@@ -65,6 +65,7 @@ class FaqService
 
             $faq->question = $request['question'];
             $faq->nepali_question = $request['nepali_question'] ?? null;
+            $faq->category = $request['category'] ?? 'products';
             $faq->answer = $request['answer'];
             $faq->save();
 

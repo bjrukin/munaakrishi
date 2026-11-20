@@ -1,12 +1,12 @@
 <script>
 $(document).ready(function() {
-	$('.drag-area').click(function() {
+	$(document).on('click', '.drag-area', function() {
 		$(this).parent().find('.drag-image').trigger('click');
 	});
-	$('.drag-image').on('change', function() {
+	$(document).on('change', '.drag-image', function() {
 		var container = $(this).closest('.drag-container');
-		var fileExtension = ['jpeg', 'jpg', 'png', 'webp'];
-		var maxSizeKB = 2000; // Maximum file size in kilobytes
+		var fileExtension = ['jpeg', 'jpg', 'png', 'webp', 'svg'];
+		var maxSizeKB = 5000; // Maximum file size in kilobytes
 		if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
 			Swal.fire({
 				title: "Allowed file : " + fileExtension.join(', '),
@@ -24,7 +24,7 @@ $(document).ready(function() {
 			var fileSizeKB = file.size / 1024; // File size in kilobytes
 			if (fileSizeKB > maxSizeKB) {
 				Swal.fire({
-					title: ('Maximum file size allowed is 2 MB'),
+					title: ('Maximum file size allowed is 5 MB'),
 					showConfirmButton: false,
 					timerProgressBar: true,
 					allowOutsideClick: false,
@@ -49,4 +49,12 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function deleteBlockImage(btn) {
+	var container = $(btn).closest('.drag-container');
+	container.find('.img-delete-btn').addClass('d-none');
+	container.find('.preview-image').addClass('d-none').attr('src', '');
+	container.find('.file-input').val('');
+	container.find('.dropify-message').removeClass('d-none').addClass('d-block');
+}
 </script>

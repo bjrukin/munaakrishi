@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\AuthController;
@@ -45,6 +46,12 @@ Route::group(['middleware' => 'auth.admin'], function () {
         Route::post('/update-account', [AccountController::class, 'addAction'])->name('admin.account.update');
         Route::post('/update-password', [AccountController::class, 'updatePassword'])->name('admin.account.update.password');
         Route::get('/logout', [AccountController::class, 'logout'])->name('admin.logout');
+    });
+
+    Route::prefix('about')->group(function () {
+        Route::get('/', [AboutController::class, 'index'])->name('admin.about');
+        Route::post('/store', [AboutController::class, 'store'])->name('admin.about.store');
+        Route::post('/imagedelete', [AboutController::class, 'imageDelete'])->name('admin.about.imagedelete');
     });
 
     Route::prefix('achievement')->group(function () {
@@ -143,6 +150,7 @@ Route::group(['middleware' => 'auth.admin'], function () {
     Route::prefix('page')->group(function () {
         Route::get('/', [PageController::class, 'list'])->name('admin.page');
         Route::get('/add.edit', [PageController::class, 'addEdit'])->name('admin.page.addEdit');
+        Route::get('/render-block', [PageController::class, 'renderBlock'])->name('admin.page.render_block');
         Route::post('/store', [PageController::class, 'store'])->name('admin.page.store');
         Route::post('/imagedelete', [PageController::class, 'imageDelete'])->name('admin.page.imagedelete');
         Route::post('/status', [PageController::class, 'status'])->name('admin.page.status');

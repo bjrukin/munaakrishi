@@ -26,7 +26,8 @@ class StoreRequest extends RestRequest
             'id' => 'integer|nullable',
             'name' => 'required',
             'image' => 'nullable',
-            'description' => 'required',
+            'description' => 'nullable',
+            'blocks' => 'nullable',
             'meta_title' => 'nullable',
             'meta_description' => 'nullable',
         ];

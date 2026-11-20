@@ -5,26 +5,44 @@
 @section('content')
   @php
     $videos = $videos ?? [];
+    $vb = $videoBlock ?? [];
+    $cb = $ctaBlock ?? [];
+
+    $heroTitle = $vb['title'] ?? 'Videos';
+    $heroSubtitle = $vb['copy'] ?? 'Company introductions, field activities and agricultural stories.';
+    $heroBg = !empty($vb['image'])
+      ? (str_starts_with($vb['image'], 'http') || str_starts_with($vb['image'], 'assets/')
+          ? asset($vb['image'])
+          : asset('storage/uploads/page/' . $vb['image']))
+      : asset('assets/images/farms/nepal-terrace-farm.jpg');
   @endphp
   @include('site._partial.ticker')
 
   <main>
     @include('site._partial.breadcrumb', [
-      'title' => 'Videos',
+      'title' => $heroTitle,
       'nepali_title' => 'भिडियोहरू',
-      'subtitle' => 'Company introductions, field activities and agricultural stories.',
-      'bg_image' => 'assets/images/farms/nepal-terrace-farm.jpg',
+      'subtitle' => $heroSubtitle,
+      'bg_image' => $heroBg,
       'breadcrumbs' => ['Videos' => '']
     ])
 
     <section class="section-padding">
       <div class="container">
+        <!-- Videos Grid Block -->
         <div class="video-grid">
           @if(count($videos) > 0)
             @foreach($videos as $vid)
+              @php
+                $imgSrc = $vid['image'];
+                if (!str_starts_with($imgSrc, 'http')) {
+                    $imgSrc = asset($imgSrc);
+                }
+                $embedUrl = $vid['embed_url'] ?? $vid['video_url'];
+              @endphp
               <article class="video-card">
-                <div class="video-thumbnail-wrap" onclick="openVideoPlayer('{{ addslashes($vid['title']) }}', '{{ $vid['video_url'] }}')">
-                  <img src="{{ asset($vid['image']) }}" alt="{{ $vid['title'] }}" loading="lazy">
+                <div class="video-thumbnail-wrap" onclick="openVideoPlayer('{{ addslashes($vid['title']) }}', '{{ $embedUrl }}')">
+                  <img src="{{ $imgSrc }}" alt="{{ $vid['title'] }}" loading="lazy">
                   <div class="video-play-center">
                     <span class="video-play-btn" aria-label="Play video">
                       <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -40,19 +58,31 @@
           @endif
         </div>
 
-        <!-- YouTube Channel Callout -->
-        <div style="margin-top: 3.5rem; background: var(--color-leaf-soft); border-left: 4px solid var(--color-haldi); padding: 2rem;">
-          <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--color-forest);">Subscribe to our YouTube Channel</h2>
-          <p style="margin-top: 0.5rem; font-size: 1.05rem; color: var(--color-muted); line-height: 1.6;">
-            Watch regular harvest updates, farmer stories and cooking demonstrations with indigenous ingredients.
-          </p>
-          <div style="margin-top: 1.25rem;">
-            <a href="https://www.youtube.com/channel/UC9BHnImyXSO6p79Gxta9wsg" target="_blank" rel="noreferrer" class="btn btn-forest" style="display: inline-flex; align-items: center; gap: 0.6rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              Visit YouTube Channel
-            </a>
+        <!-- YouTube Channel / CTA Block -->
+        @if($cb === null || ($cb['is_enabled'] ?? true))
+          @php
+            $ctaTitle = $cb['title'] ?? 'Subscribe to our YouTube Channel';
+            $ctaCopy = $cb['copy'] ?? 'Watch regular harvest updates, farmer stories and cooking demonstrations with indigenous ingredients.';
+            $ctaBtnText = $cb['btn_text'] ?? 'Visit YouTube Channel';
+            $ctaBtnLink = $cb['btn_link'] ?? 'https://www.youtube.com/channel/UC9BHnImyXSO6p79Gxta9wsg';
+          @endphp
+          <div style="margin-top: 3.5rem; background: var(--color-leaf-soft); border-left: 4px solid var(--color-haldi); padding: 2rem; border-radius: 4px;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--color-forest);">{{ $ctaTitle }}</h2>
+            @if(!empty($ctaCopy))
+              <p style="margin-top: 0.5rem; font-size: 1.05rem; color: var(--color-muted); line-height: 1.6;">
+                {{ $ctaCopy }}
+              </p>
+            @endif
+            @if(!empty($ctaBtnText))
+              <div style="margin-top: 1.25rem;">
+                <a href="{{ $ctaBtnLink }}" target="_blank" rel="noreferrer" class="btn btn-forest" style="display: inline-flex; align-items: center; gap: 0.6rem;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  {{ $ctaBtnText }}
+                </a>
+              </div>
+            @endif
           </div>
-        </div>
+        @endif
       </div>
     </section>
 
@@ -71,9 +101,15 @@
   </main>
 
   <script>
+    function toEmbedUrl(url) {
+      if (!url) return '';
+      if (url.includes('/embed/')) return url;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      return match ? 'https://www.youtube.com/embed/' + match[1] + '?autoplay=1' : url;
+    }
     function openVideoPlayer(title, embedUrl) {
       document.getElementById('modal-video-title').textContent = title;
-      document.getElementById('video-modal-iframe').src = embedUrl;
+      document.getElementById('video-modal-iframe').src = toEmbedUrl(embedUrl);
       const modal = document.getElementById('video-modal');
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';

@@ -38,6 +38,25 @@ class PageController extends Controller {
         return view('admin.page.form', $data);
     }
 
+    public function renderBlock(Request $request) {
+        $type = $request->get('type', 'rich_content');
+        $index = (int)$request->get('index', 0);
+        $label = $request->get('label', ucwords(str_replace('_', ' ', $type)));
+        $b = [
+            'type' => $type,
+            'is_enabled' => true,
+            'data' => [
+                'title' => $label,
+            ]
+        ];
+        return view('admin.page.form.block_card', [
+            'b' => $b,
+            'index' => $index,
+            'bType' => $type,
+            'bData' => $b['data'],
+        ]);
+    }
+
     public function store(StoreRequest $request) {
         return $this->service->store($request->validated());
     }

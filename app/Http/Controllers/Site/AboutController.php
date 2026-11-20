@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\About;
 use App\Models\Achievement;
 use App\Models\Banner;
 use App\Models\History;
 use App\Models\Leadership;
+use App\Models\Page;
 use App\Models\Team;
 
 class AboutController extends Controller {
@@ -14,7 +16,9 @@ class AboutController extends Controller {
     public function whoWeAre() {
         $data['nav'] = 'about';
         $data['metahead'] = 'seo';
-        $data['page_title'] = 'About Munaa Krishi';
+        $data['page'] = Page::where('slug', 'about')->first();
+        $data['about'] = About::first();
+        $data['page_title'] = $data['about']->meta_title ?? ($data['page']->meta_title ?? 'About Munaa Krishi');
         $data['banner'] = Banner::where(['name' => 'Who we are', 'status' => 1])->first();
         $data['histories'] = History::where('status', 1)->orderBy('year', 'asc')->get();
         $data['achievements'] = Achievement::where('status', 1)->orderBy('id', 'desc')->get();

@@ -41,9 +41,11 @@
                         <thead class="table-dark">
                             <tr>
                                 <th width="30">#</th>
-                                <th>Office Name</th>
-                                <th width="150">Order</th>
-                                <th width="150">Status</th>
+                                <th>Office / Outlet Name</th>
+                                <th>Address</th>
+                                <th width="140">Google Location</th>
+                                <th width="120">Order</th>
+                                <th width="120">Status</th>
                                 <th width="100">Action</th>
                             </tr>
                         </thead>
@@ -51,7 +53,22 @@
                             @foreach($result['offices'] as $office)
                             <tr>
                                 <td>{{ $result['count']++ }}.</td>
-                                <td>{{ $office->name }}</td>
+                                <td>
+                                    <strong>{{ $office->name }}</strong>
+                                    @if(!empty($office->phone))
+                                        <div class="small text-muted">{{ $office->phone }}</div>
+                                    @endif
+                                </td>
+                                <td>{{ $office->address ?? '—' }}</td>
+                                <td>
+                                    @if(!empty($office->google_map))
+                                        <a href="{{ $office->map_link }}" target="_blank" rel="noreferrer" class="btn btn-sm btn-outline-success p-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="fa fa-map-marker-alt text-danger me-1"></i> Map Link
+                                        </a>
+                                    @else
+                                        <span class="badge bg-light text-muted border">Auto Address</span>
+                                    @endif
+                                </td>
                                 <td>
                                 <select name="order" class="form-select"
                                         onchange="changeOrder('{{$office->id}}', this)">

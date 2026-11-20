@@ -36,8 +36,27 @@
                     </div>
                 </div>
             </div>
+            <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold mb-1">Photo Name / Caption</label>
+                    <input type="text" class="form-control form-control-sm" name="name" placeholder="e.g. Apple harvest in Jumla orchard">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold mb-1">Location</label>
+                    <input type="text" class="form-control form-control-sm" name="location" placeholder="e.g. Jumla, Karnali Province">
+                </div>
+            </div>
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary btn-loading">Submit</button>
+                <label class="form-label small fw-bold mb-1">Category</label>
+                <select class="form-select form-select-sm" name="category">
+                    <option value="harvest">Harvests</option>
+                    <option value="farm-visits">Farm Visits</option>
+                    <option value="outlets">Outlets</option>
+                    <option value="community">Community</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary btn-loading">Upload Photo</button>
             </div>
         </form>
         @if(count($gallery->images) > 0)
@@ -47,6 +66,9 @@
                     <tr>
                         <th>S.No.</th>
                         <th>Image</th>
+                        <th>Name / Caption</th>
+                        <th>Category</th>
+                        <th>Location</th>
                         <th>Order</th>
                         <th>Delete</th>
                     </tr>
@@ -54,8 +76,9 @@
                 <tbody>
                     @foreach($gallery->images as $image) <tr>
                         <td>{{$cnt++}}</td>
-                        <td><img src="{{$image->url_image}}" style="width:150px; height: 150px;"></td>
-                        <td> <select name="order" class="form-select" onchange="changeOrder('{{$image->id}}', this)">
+                        <td><img src="{{$image->url_image}}" style="width:100px; height: 80px; object-fit:cover;"></td>
+                        <td><small class="text-muted">{{ $image->name ?? $image->caption ?? '—' }}</small><br><span class="badge bg-secondary">{{ $image->category ?? 'harvest' }}</span> {{ $image->location ?? '' }}</td>
+                        <td> <select name="order" class="form-select form-select-sm" style="width:70px;" onchange="changeOrder('{{$image->id}}', this)">
                                 @for($i=1; $i<= count($gallery->images); $i++) <option value="{{ $i }}" @if($image->
                                         order ==
                                         $i)

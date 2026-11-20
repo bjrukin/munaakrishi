@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests\Admin\Office;
+
 use App\Http\Requests\RestRequest;
 
 class StoreRequest extends RestRequest
@@ -17,7 +18,6 @@ class StoreRequest extends RestRequest
 
     /**
      * Get the validation rules that apply to the request.
-     * 
      *
      * @return array
      */
@@ -27,8 +27,9 @@ class StoreRequest extends RestRequest
             'id' => 'integer|nullable',
             'name' => 'required',
             'address' => 'nullable',
-            'email' => 'nullable|email',
+            'email' => 'nullable',
             'phone' => 'nullable',
+            'google_map' => 'nullable',
         ];
     }
 }

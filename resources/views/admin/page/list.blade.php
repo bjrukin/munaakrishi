@@ -41,16 +41,48 @@
                         <thead class="table-dark">
                             <tr>
                                 <th width="30">#</th>
-                                <th>Page Title</th>
-                                <th width="150">Status</th>
-                                <th width="100">Action</th>
+                                <th width="160">Page Title</th>
+                                <th width="110">Slug</th>
+                                <th>Blocks (JSON Architecture)</th>
+                                <th width="100">Status</th>
+                                <th width="180">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($result['pages'] as $page)
+                            @php
+                                $blocks = is_array($page->blocks) ? $page->blocks : (json_decode($page->blocks ?? '[]', true) ?: []);
+                                $dynamicTypes = ['hero', 'products', 'farms', 'faqs', 'outlets', 'videos', 'gallery', 'news', 'our_team', 'board_of_directors', 'testimonials'];
+                            @endphp
                             <tr>
                                 <td>{{ $result['count']++ }}.</td>
-                                <td>{{ $page->name }}</td>
+                                <td>
+                                    <strong>{{ $page->name }}</strong>
+                                </td>
+                                <td>
+                                    <code>{{ $page->slug ?: '-' }}</code>
+                                </td>
+                                <td>
+                                    @if(count($blocks) > 0)
+                                        <div class="d-flex flex-wrap gap-1 align-items-center mb-1">
+                                            <span class="badge bg-dark me-1">{{ count($blocks) }} blocks</span>
+                                            @foreach(array_slice($blocks, 0, 5) as $b)
+                                                @php
+                                                    $bType = $b['type'] ?? '';
+                                                    $isDyn = in_array($bType, $dynamicTypes);
+                                                @endphp
+                                                <span class="badge {{ $isDyn ? 'bg-success' : 'bg-primary' }}" style="font-size: 0.72rem;" title="{{ $isDyn ? 'Dynamic: pulls from database table' : 'Content Block' }}">
+                                                    {{ $isDyn ? '⚡ ' : '' }}{{ ucwords(str_replace('_', ' ', $bType)) }}
+                                                </span>
+                                            @endforeach
+                                            @if(count($blocks) > 5)
+                                                <span class="badge bg-secondary" style="font-size: 0.72rem;">+{{ count($blocks) - 5 }} more</span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-muted small">No blocks configured</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <label class="switch">
                                         <input class="switch-input switch-status" type="checkbox"
@@ -61,7 +93,14 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <a href="{{route('admin.page.addEdit', ['id'=>$page->id])}}"> <span class="mat_sym-icon material-symbols-outlined">edit</span> </a>
+                                    @if($page->slug == 'about' || $page->id == 2)
+                                        <a href="{{route('admin.about')}}" class="btn btn-sm btn-outline-info me-1" title="About Overview & Blocks">
+                                            <span class="material-symbols-outlined align-middle" style="font-size: 16px;">corporate_fare</span> About
+                                        </a>
+                                    @endif
+                                    <a href="{{route('admin.page.addEdit', ['id'=>$page->id])}}" class="btn btn-sm btn-outline-primary" title="Edit Page & Manage Blocks">
+                                        <span class="material-symbols-outlined align-middle" style="font-size: 16px;">edit</span> Edit Blocks
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

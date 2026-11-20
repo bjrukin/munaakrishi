@@ -13,7 +13,18 @@ class PageController extends Controller {
         $data['nav'] = 'support';
         $data['metahead'] = 'seo';
         $data['page_title'] = 'Frequently Asked Questions';
-        $data['faqs'] = Faq::where('status', 1)->orderBy('order', 'asc')->get();
+
+        $page = Page::where('slug', 'faq')->first();
+        $faqBlock = $page ? $page->getBlock('faqs') : null;
+        $ctaBlock = $page ? ($page->getBlock('cta_banner') ?? $page->getBlock('contact_box')) : null;
+
+        $limit = (int) ($faqBlock['limit'] ?? 50);
+
+        $data['faqs'] = Faq::where('status', 1)->orderBy('order', 'asc')->limit($limit)->get();
+        $data['page'] = $page;
+        $data['faqBlock'] = $faqBlock;
+        $data['ctaBlock'] = $ctaBlock;
+
         return view('site.faq.index', $data);
     }
 

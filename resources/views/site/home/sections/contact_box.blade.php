@@ -9,6 +9,12 @@
           <p style="margin-top: 0.75rem; font-size: 1.05rem; line-height: 1.7; color: var(--color-muted);">
             {{ $settings['copy'] ?? 'Have questions about sourcing, wholesale partnerships, mart locations, or home delivery? Our customer support is ready to assist.' }}
           </p>
+          @if(!empty($settings['address']))
+            <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--color-forest); font-weight: 600;">
+              <span class="material-symbols-outlined align-middle me-1" style="font-size: 18px;">location_on</span>
+              {{ $settings['address'] }}
+            </p>
+          @endif
         </div>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           <div style="display: flex; align-items: center; gap: 1rem;">
@@ -17,7 +23,7 @@
             </div>
             <div>
               <small class="text-muted" style="display: block;">Direct Call / WhatsApp</small>
-              <strong style="font-size: 1.15rem; color: var(--color-ink);">+977-98031 65605</strong>
+              <strong style="font-size: 1.15rem; color: var(--color-ink);">{{ $settings['phone'] ?? ($settings['whatsapp'] ?? '+977-98031 65605') }}</strong>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 1rem;">
@@ -26,7 +32,7 @@
             </div>
             <div>
               <small class="text-muted" style="display: block;">Email Inquiries</small>
-              <strong style="font-size: 1.05rem; color: var(--color-ink);">info@munaakrishi.com</strong>
+              <strong style="font-size: 1.05rem; color: var(--color-ink);">{{ $settings['email'] ?? 'info@munaakrishi.com' }}</strong>
             </div>
           </div>
           <div style="margin-top: 0.5rem;">

@@ -57,6 +57,7 @@ Route::get('/videos', [VideoController::class, 'index'])->name('videos');
 // Support & Info
 Route::get('/faq', [PageController::class, 'faq'])->name('faq');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact/inquiry', [ContactController::class, 'store'])->name('contact.inquiry.store');
 
 // Legal & Policies
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');

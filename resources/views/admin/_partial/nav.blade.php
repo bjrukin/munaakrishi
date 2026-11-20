@@ -102,6 +102,9 @@
                     </a>
                     <div class="collapse @if($nav == 'support') show @endif" id="support">
                         <ul class="nav-second-level">
+                            <li class="@if($sub_nav == 'inquiry') menuitem-active @endif">
+                                <a href="{{route('admin.inquiry')}}">Inquiries</a>
+                            </li>
                             <li class="@if($sub_nav == 'faq') menuitem-active @endif">
                                 <a href="{{route('admin.faq')}}">FAQs</a>
                             </li>

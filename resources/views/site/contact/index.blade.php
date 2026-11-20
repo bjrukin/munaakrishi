@@ -74,7 +74,9 @@
 
             <!-- TAB 1: General Inquiry Form -->
             <div id="tab-pane-general">
-              <form id="general-inquiry-form" class="form-grid-2" novalidate>
+              <form id="general-inquiry-form" class="form-grid-2" action="{{ route('contact.inquiry.store') }}" method="post" novalidate>
+                @csrf
+                <input type="hidden" name="type" value="general">
                 <div class="form-group">
                   <label class="form-label" for="gi-name">Full name <span class="required">*</span></label>
                   <input id="gi-name" name="name" type="text" class="form-control" autocomplete="name" placeholder="Ram Bahadur Shrestha" required>
@@ -131,7 +133,9 @@
 
             <!-- TAB 2: Farmer Partnership Application Form -->
             <div id="tab-pane-farmer" style="display: none;">
-              <form id="farmer-onboarding-form" novalidate>
+              <form id="farmer-onboarding-form" action="{{ route('contact.inquiry.store') }}" method="post" novalidate>
+                @csrf
+                <input type="hidden" name="type" value="farmer">
 
                 <!-- About You -->
                 <fieldset class="form-fieldset">
@@ -206,15 +210,15 @@
                   <legend class="form-legend">2. What you grow <span class="required">*</span></legend>
                   <p style="font-size: 0.85rem; color: var(--color-muted); margin-bottom: 0.5rem;">Click all crop types that you harvest and wish to supply:</p>
                   <div class="crop-pills-wrap">
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Rice and grains">Rice and grains</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Vegetables">Vegetables</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Fruits">Fruits</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Honey">Honey</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Dairy and cheese">Dairy and cheese</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Tea">Tea</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Spices">Spices</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Pickles and dried food">Pickles and dried food</label>
-                    <label class="crop-pill-label"><input type="checkbox" name="crop" value="Other">Other</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Rice and grains">Rice and grains</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Vegetables">Vegetables</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Fruits">Fruits</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Honey">Honey</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Dairy and cheese">Dairy and cheese</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Tea">Tea</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Spices">Spices</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Pickles and dried food">Pickles and dried food</label>
+                    <label class="crop-pill-label"><input type="checkbox" name="crops[]" value="Other">Other</label>
                   </div>
                   <div id="fo-crops-error" class="form-error" style="margin-top: 0.5rem;"></div>
                 </fieldset>

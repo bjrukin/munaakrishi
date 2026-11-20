@@ -24,7 +24,8 @@
             <div class="dropdown-title">Company Profile</div>
             <div class="dropdown-note">Profile, purpose and organization</div>
           </a>
-          <!-- <a href="{{ route('chairman.message') }}" class="dropdown-item">
+          {{-- Hidden from menu: Chairman's Message, Board of Directors, Our Team
+          <a href="{{ route('chairman.message') }}" class="dropdown-item">
             <div class="dropdown-title">Chairman's Message</div>
             <div class="dropdown-note">Message from leadership</div>
           </a>
@@ -35,7 +36,8 @@
           <a href="{{ route('team') }}" class="dropdown-item">
             <div class="dropdown-title">Our Team</div>
             <div class="dropdown-note">People across Munaa Krishi</div>
-          </a> -->
+          </a>
+          --}}
         </div>
       </div>
 
@@ -136,9 +138,10 @@
           </button>
           <ul class="mobile-sub-list">
             <li><a href="{{ route('about') }}" class="mobile-sub-link {{ $current_nav === 'about' ? 'active' : '' }}">Company Profile</a></li>
-            <li><a href="{{ route('chairman.message') }}" class="mobile-sub-link {{ $current_nav === 'chairman' ? 'active' : '' }}">Chairman's Message</a></li>
-            <li><a href="{{ route('board.of.directors') }}" class="mobile-sub-link">Board of Directors</a></li>
-            <li><a href="{{ route('team') }}" class="mobile-sub-link">Our Team</a></li>
+            {{-- Hidden: Chairman's Message, Board of Directors, Our Team --}}
+            {{-- <li><a href="{{ route('chairman.message') }}" class="mobile-sub-link {{ $current_nav === 'chairman' ? 'active' : '' }}">Chairman's Message</a></li> --}}
+            {{-- <li><a href="{{ route('board.of.directors') }}" class="mobile-sub-link">Board of Directors</a></li> --}}
+            {{-- <li><a href="{{ route('team') }}" class="mobile-sub-link">Our Team</a></li> --}}
           </ul>
         </li>
 

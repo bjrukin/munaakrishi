@@ -5,15 +5,23 @@
 @section('content')
   @php
     $photos = $photos ?? [];
+    $gb = $galleryBlock ?? [];
+    $heroTitle    = $gb['title']    ?? 'Photo Gallery & Field Moments';
+    $heroSubtitle = $gb['copy']     ?? 'Scenes from our partner farms, seasonal harvests and daily life at Munaa outlets.';
+    $heroBg       = !empty($gb['image'])
+        ? (str_starts_with($gb['image'], 'http') || str_starts_with($gb['image'], 'assets/')
+            ? asset($gb['image'])
+            : asset('storage/uploads/page/' . $gb['image']))
+        : asset('assets/images/farms/nepal-terrace-farm.jpg');
   @endphp
   @include('site._partial.ticker')
 
   <main class="gallery-page">
     @include('site._partial.breadcrumb', [
-      'title' => 'Photo Gallery',
-      'nepali_title' => 'फोटो ग्यालरी',
-      'subtitle' => 'Scenes from our partner farms, seasonal harvests and daily life at Munaa outlets.',
-      'bg_image' => 'assets/images/farms/nepal-terrace-farm.jpg',
+      'title'       => $heroTitle,
+      'nepali_title'=> 'फोटो ग्यालरी',
+      'subtitle'    => $heroSubtitle,
+      'bg_image'    => $heroBg,
       'breadcrumbs' => ['Gallery' => '']
     ])
 
@@ -31,10 +39,17 @@
         <!-- Masonry / Columns Photo Grid -->
         <div class="gallery-columns-wrap" style="margin-top: 2.5rem;">
           @foreach($photos as $idx => $photo)
+            @php
+              $imgSrc = $photo['image'];
+              // If it's already a full URL, use it; otherwise prefix with asset()
+              if (!str_starts_with($imgSrc, 'http')) {
+                  $imgSrc = asset($imgSrc);
+              }
+            @endphp
             <div class="gallery-photo-item" data-album="{{ $photo['album'] ?? 'harvest' }}">
               <button type="button" class="gallery-card-btn" data-gallery-index="{{ $idx }}">
                 <div class="gallery-img-box">
-                  <img src="{{ asset($photo['image']) }}" alt="{{ $photo['caption'] }}" loading="lazy">
+                  <img src="{{ $imgSrc }}" alt="{{ $photo['caption'] }}" loading="lazy">
                 </div>
                 <div class="gallery-caption-box">
                   <strong>{{ $photo['caption'] }}</strong>

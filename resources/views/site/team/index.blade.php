@@ -165,5 +165,7 @@
         </div>
       </div>
     </section>
+
+    @include('site._partial.dynamic_sections', ['page' => 'our-team'])
   </main>
 @endsection

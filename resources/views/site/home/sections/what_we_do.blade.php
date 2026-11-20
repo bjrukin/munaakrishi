@@ -5,43 +5,42 @@
       <div>
         <p class="section-label">{{ $settings['subtitle'] ?? 'What we do' }}</p>
         <h2 class="section-title">{{ $settings['title'] ?? 'From farmers to markets' }}</h2>
-        <div style="position: relative; margin-top: 2rem; overflow: hidden; box-shadow: var(--shadow-sm);">
-          <img loading="lazy" decoding="async" src="{{ asset('assets/images/gallery/farmer-cutting-millet.jpg') }}" alt="Farmer handling harvested produce" style="aspect-ratio: 16/10; width: 100%; object-fit: cover;">
+        @php
+          $rawImg = $settings['image'] ?? '';
+          if (!empty($rawImg)) {
+            $imgUrl = (str_starts_with($rawImg, 'http') || str_starts_with($rawImg, 'assets/'))
+              ? asset($rawImg)
+              : asset('storage/uploads/page/' . $rawImg);
+          } else {
+            $imgUrl = asset('assets/images/gallery/farmer-cutting-millet.jpg');
+          }
+        @endphp
+        <div style="position: relative; margin-top: 2rem; overflow: hidden; box-shadow: var(--shadow-sm); border-radius: var(--radius-md, 8px);">
+          <img loading="lazy" decoding="async" src="{{ $imgUrl }}" alt="{{ $settings['title'] ?? 'What Munaa Krishi does' }}" style="aspect-ratio: 16/10; width: 100%; object-fit: cover;">
           <div style="position: absolute; bottom: 0; left: 0; background: var(--color-haldi); color: var(--color-ink); padding: 0.6rem 1.15rem; font-weight: 700; font-size: 0.92rem;">
             Fair partnership with farmers
           </div>
         </div>
       </div>
       <div>
+        @php
+          $items = (!empty($settings['items']) && is_array($settings['items'])) ? $settings['items'] : [
+            'Buy-back guarantee for farmers',
+            'Agricultural value chain development',
+            'Collection, grading, packaging, and distribution',
+            'Promotion of safe and organic farming',
+            'Technology transfer and farmer training',
+            'Retail marketing through the Munaa Bazar supermarket chain',
+            'Market linkage and business development'
+          ];
+        @endphp
         <ul style="border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); list-style: none; padding: 0; margin: 0;">
-          <li class="what-we-do-step" style="--step-index: 0; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">01</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Buy-back guarantee for farmers</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 1; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">02</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Agricultural value chain development</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 2; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">03</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Collection, grading, packaging, and distribution</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 3; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">04</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Promotion of safe and organic farming</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 4; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">05</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Technology transfer and farmer training</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 5; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--color-line);">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">06</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Retail marketing through the Munaa Bazar supermarket chain</h3>
-          </li>
-          <li class="what-we-do-step" style="--step-index: 6; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0;">
-            <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">07</span>
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">Market linkage and business development</h3>
-          </li>
+          @foreach($items as $iIdx => $item)
+            <li class="what-we-do-step" style="--step-index: {{ $iIdx }}; display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: center; padding: 1.1rem 0; {{ !$loop->last ? 'border-bottom: 1px solid var(--color-line);' : '' }}">
+              <span style="font-weight: 800; color: var(--color-sindoor); font-size: 0.95rem;">{{ str_pad($iIdx + 1, 2, '0', STR_PAD_LEFT) }}</span>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--color-ink); margin: 0;">{{ $item }}</h3>
+            </li>
+          @endforeach
         </ul>
       </div>
     </div>

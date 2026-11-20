@@ -74,6 +74,7 @@ class OfficeService {
             $office->address = $request['address'];
             $office->email = $request['email'];
             $office->phone = $request['phone'];
+            $office->google_map = $request['google_map'] ?? null;
             $office->save();
             return response()->json($response, $response['status']);
         } catch (\Exception $e) {

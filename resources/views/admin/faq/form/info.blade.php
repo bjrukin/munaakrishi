@@ -13,6 +13,16 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Category / Topic</label>
+                <select class="form-select" name="category">
+                    <option value="products" {{ old('category', $row ? $row->category : 'products') === 'products' ? 'selected' : '' }}>Products & Delivery</option>
+                    <option value="farmers" {{ old('category', $row ? $row->category : '') === 'farmers' ? 'selected' : '' }}>Farmers & Payments</option>
+                    <option value="institutions" {{ old('category', $row ? $row->category : '') === 'institutions' ? 'selected' : '' }}>Institutions & Outlets</option>
+                </select>
+                <small class="text-muted">Used for the category filter pills on the FAQ Help Center.</small>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Answer <span class="text-danger">*</span></label>
                 <textarea class="form-control" name="answer" rows="5" required placeholder="Detailed helpful answer...">{{ old('answer', $row ? $row->answer : '') }}</textarea>
             </div>

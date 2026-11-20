@@ -40,10 +40,11 @@
                             <tr>
                                 <th width="30">#</th>
                                 <th>Question</th>
+                                <th width="170">Category</th>
                                 <th>Answer Preview</th>
-                                <th width="120">Order</th>
-                                <th width="120">Status</th>
-                                <th width="100">Action</th>
+                                <th width="100">Order</th>
+                                <th width="100">Status</th>
+                                <th width="90">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,6 +56,17 @@
                                     @if($faq->nepali_question)
                                         <br><small class="text-muted">{{ $faq->nepali_question }}</small>
                                     @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $catLabels = [
+                                            'products' => ['Products & Delivery', 'bg-success'],
+                                            'farmers' => ['Farmers & Payments', 'bg-warning text-dark'],
+                                            'institutions' => ['Institutions & Outlets', 'bg-info text-dark'],
+                                        ];
+                                        $catInfo = $catLabels[$faq->category ?? 'products'] ?? ['Products & Delivery', 'bg-success'];
+                                    @endphp
+                                    <span class="badge {{ $catInfo[1] }}">{{ $catInfo[0] }}</span>
                                 </td>
                                 <td><small class="text-muted">{{ Str::limit($faq->answer, 100) }}</small></td>
                                 <td>

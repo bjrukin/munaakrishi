@@ -5,8 +5,18 @@
 @section('content')
   @include('site._partial.ticker')
 
-  <main>
-    @include('site._partial.dynamic_sections', ['page' => 'home'])
+  <main class="home-page">
+    @php
+      $pageBlocks = ($page && is_array($page->blocks) && count($page->blocks)) ? $page->blocks : null;
+    @endphp
+
+    @if(!empty($pageBlocks))
+      {{-- Unified Modular Block Architecture Rendering --}}
+      @include('site._partial.render_blocks', ['blocks' => $pageBlocks])
+    @else
+      {{-- Fallback dynamic sections if blocks JSON is empty --}}
+      @include('site._partial.dynamic_sections', ['page' => 'home'])
+    @endif
   </main>
 
   <style>

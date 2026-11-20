@@ -13,9 +13,18 @@ class NoticeController extends Controller
     {
         $data['nav'] = 'news';
         $data['metahead'] = 'seo';
-        $data['page_title'] = 'News and Activities';
 
-        $dbNotices = Notice::where('status', 1)->orderBy('date', 'desc')->get();
+        $page = \App\Models\Page::where('slug', 'news')->first();
+        $data['page'] = $page;
+        $newsBlock = $page ? $page->getBlock('news') : null;
+        $data['newsBlock'] = $newsBlock;
+        $data['page_title'] = $newsBlock['title'] ?? ($page->meta_title ?? 'News and Activities');
+
+        $query = Notice::where('status', 1)->orderBy('date', 'desc');
+        if (!empty($newsBlock['limit']) && is_numeric($newsBlock['limit']) && (int)$newsBlock['limit'] > 0) {
+            $query->take((int)$newsBlock['limit']);
+        }
+        $dbNotices = $query->get();
 
         $data['articles'] = $dbNotices->map(function ($n) {
             $slug = Str::slug($n->name);

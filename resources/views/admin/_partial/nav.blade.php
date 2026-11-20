@@ -49,6 +49,9 @@
                     </a>
                     <div class="collapse @if($nav == 'about') show @endif" id="about">
                         <ul class="nav-second-level">
+                            <li class="@if($sub_nav == 'about_entry') menuitem-active @endif">
+                                <a href="{{route('admin.about')}}">About Us / Overview</a>
+                            </li>
                             <li class="@if($sub_nav == 'leadership') menuitem-active @endif">
                                 <a href="{{route('admin.leadership')}}">Leadership</a>
                             </li>

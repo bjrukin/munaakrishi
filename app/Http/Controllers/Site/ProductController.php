@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Page;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,18 @@ class ProductController extends Controller
     {
         $data['nav'] = 'products';
         $data['metahead'] = 'seo';
-        $data['page_title'] = 'Products';
 
-        $dbProducts = Product::where('status', 1)->orderBy('order', 'asc')->get();
+        $page = Page::where('slug', 'products')->first();
+        $data['page'] = $page;
+        $productBlock = $page ? $page->getBlock('products') : null;
+        $data['productBlock'] = $productBlock;
+        $data['page_title'] = $productBlock['title'] ?? 'Products';
+
+        $query = Product::where('status', 1)->orderBy('order', 'asc');
+        if (!empty($productBlock['limit']) && is_numeric($productBlock['limit']) && (int)$productBlock['limit'] > 0) {
+            $query->take((int)$productBlock['limit']);
+        }
+        $dbProducts = $query->get();
 
         $data['products'] = $dbProducts->map(function ($p) {
             return [

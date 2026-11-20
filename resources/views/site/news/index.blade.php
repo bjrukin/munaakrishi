@@ -7,15 +7,19 @@
     $articles = $articles ?? [];
     $lead_article = $lead_article ?? (count($articles) > 0 ? $articles[0] : null);
     $remaining_articles = count($articles) > 1 ? array_slice($articles, 1) : [];
+    $newsBlock = $newsBlock ?? ($page ? $page->getBlock('news') : null);
+    $bgImg = !empty($newsBlock['image'])
+      ? ((str_starts_with($newsBlock['image'], 'http') || str_starts_with($newsBlock['image'], 'assets/')) ? asset($newsBlock['image']) : asset('storage/uploads/page/' . $newsBlock['image']))
+      : asset('assets/images/farms/nepal-terrace-farm.jpg');
   @endphp
   @include('site._partial.ticker')
 
   <main class="news-archive-page">
     @include('site._partial.breadcrumb', [
-      'title' => 'News & Activities',
+      'title' => $newsBlock['title'] ?? 'News & Activities',
       'nepali_title' => 'समाचार तथा गतिविधि',
-      'subtitle' => 'Harvest updates, stories from our partner farms, seasonal produce alerts and community notices.',
-      'bg_image' => 'assets/images/farms/nepal-terrace-farm.jpg',
+      'subtitle' => $newsBlock['copy'] ?? 'Harvest updates, stories from our partner farms, seasonal produce alerts and community notices.',
+      'bg_image' => $bgImg,
       'breadcrumbs' => ['News' => '']
     ])
 
@@ -33,9 +37,12 @@
 
         <!-- Lead Story -->
         @if($lead_article)
+          @php
+            $leadImg = str_starts_with($lead_article['image'], 'http') ? $lead_article['image'] : asset($lead_article['image']);
+          @endphp
           <article class="news-lead news-item-wrap" data-category="{{ $lead_article['category'] ?? 'Harvest Stories' }}">
             <a href="{{ route('news.detail', $lead_article['slug']) }}" class="news-lead-img-wrap">
-              <img src="{{ asset($lead_article['image']) }}" alt="{{ $lead_article['title'] }}" class="news-lead-img" loading="eager" decoding="async" fetchpriority="high">
+              <img src="{{ $leadImg }}" alt="{{ $lead_article['title'] }}" class="news-lead-img" loading="eager" decoding="async" fetchpriority="high">
             </a>
             <div class="news-lead-body">
               <p class="news-meta">
@@ -48,7 +55,7 @@
                 {{ $lead_article['summary'] }}
               </p>
               <p style="margin-top: 1.25rem; font-size: 0.88rem; color: var(--color-muted);">
-                By <strong>{{ $lead_article['author'] ?? 'Munaa Team' }}</strong> · {{ $lead_article['read_time'] ?? '3 min read' }}
+                By <strong>{{ $lead_article['author'] ?? 'Munaa Krishi Team' }}</strong> · {{ $lead_article['read_time'] ?? '3 min read' }}
               </p>
             </div>
           </article>
@@ -57,9 +64,12 @@
         <!-- More Stories Grid -->
         <div class="news-grid" id="news-grid-container">
           @foreach($remaining_articles as $art)
+            @php
+              $artImg = str_starts_with($art['image'], 'http') ? $art['image'] : asset($art['image']);
+            @endphp
             <article class="news-card news-item-wrap" data-category="{{ $art['category'] ?? 'Harvest Stories' }}">
               <a href="{{ route('news.detail', $art['slug']) }}" class="news-card-img-wrap">
-                <img src="{{ asset($art['image']) }}" alt="{{ $art['title'] }}" class="news-card-img" loading="lazy">
+                <img src="{{ $artImg }}" alt="{{ $art['title'] }}" class="news-card-img" loading="lazy">
               </a>
               <div class="news-card-body">
                 <p class="news-meta"><span class="news-category">{{ $art['category'] ?? 'Harvest Stories' }}</span> · {{ $art['date'] }}</p>

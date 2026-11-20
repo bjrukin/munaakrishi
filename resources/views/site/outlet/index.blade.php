@@ -3,15 +3,25 @@
 @section('content')
   @php
     $outlets = $outlets ?? [];
+    $ob = $outletBlock ?? [];
+    $cb = $contactBlock ?? [];
+
+    $heroTitle = $ob['title'] ?? 'Outlets directory';
+    $heroSubtitle = $ob['copy'] ?? 'Munaabazar Mart locations, customer counters and regional collection hubs.';
+    $heroBg = !empty($ob['image'])
+      ? (str_starts_with($ob['image'], 'http') || str_starts_with($ob['image'], 'assets/')
+          ? asset($ob['image'])
+          : asset('storage/uploads/page/' . $ob['image']))
+      : asset('assets/images/farms/nepal-terrace-farm.jpg');
   @endphp
   @include('site._partial.ticker')
 
   <main>
     @include('site._partial.breadcrumb', [
-      'title' => 'Outlets directory',
+      'title' => $heroTitle,
       'nepali_title' => 'हाम्रा शाखाहरू',
-      'subtitle' => 'Munaabazar Mart locations, customer counters and regional collection hubs.',
-      'bg_image' => 'assets/images/farms/nepal-terrace-farm.jpg',
+      'subtitle' => $heroSubtitle,
+      'bg_image' => $heroBg,
       'breadcrumbs' => ['Outlets' => '']
     ])
 
@@ -45,7 +55,7 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         Call
                       </a>
-                      <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($outlet['map_query']) }}" target="_blank" rel="noreferrer" class="btn btn-outline-forest" style="padding: 0.4rem 0.85rem; font-size: 0.88rem;">
+                      <a href="{{ $outlet['map_url'] ?? ('https://www.google.com/maps/search/?api=1&query=' . urlencode($outlet['map_query'])) }}" target="_blank" rel="noreferrer" class="btn btn-outline-forest" style="padding: 0.4rem 0.85rem; font-size: 0.88rem;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         Maps
                       </a>
@@ -58,5 +68,9 @@
         </div>
       </div>
     </section>
+
+    @if(!empty($cb) && ($cb['is_enabled'] ?? true))
+      @include('site.home.sections.contact_box', ['settings' => $cb])
+    @endif
   </main>
 @endsection

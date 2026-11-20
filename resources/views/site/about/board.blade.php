@@ -117,5 +117,7 @@
         </div>
       </div>
     </section>
+
+    @include('site._partial.dynamic_sections', ['page' => 'board-of-directors'])
   </main>
 @endsection

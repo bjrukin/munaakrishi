@@ -12,6 +12,7 @@ class Faq extends Model
     protected $fillable = [
         'question',
         'nepali_question',
+        'category',
         'answer',
         'order',
         'status',

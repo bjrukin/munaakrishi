@@ -23,9 +23,10 @@
       <h2 class="footer-heading">COMPANY</h2>
       <ul class="footer-links">
         <li><a href="{{ route('about') }}">Company Profile</a></li>
-        <li><a href="{{ route('chairman.message') }}">Chairman's Message</a></li>
-        <li><a href="{{ route('board.of.directors') }}">Board of Directors</a></li>
-        <li><a href="{{ route('team') }}">Our Team</a></li>
+        {{-- Hidden: Chairman's Message, Board of Directors, Our Team --}}
+        {{-- <li><a href="{{ route('chairman.message') }}">Chairman's Message</a></li> --}}
+        {{-- <li><a href="{{ route('board.of.directors') }}">Board of Directors</a></li> --}}
+        {{-- <li><a href="{{ route('team') }}">Our Team</a></li> --}}
       </ul>
     </div>
 

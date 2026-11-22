@@ -199,6 +199,7 @@ Route::group(['middleware' => 'auth.admin'], function () {
 
     Route::prefix('testimonial')->group(function () {
         Route::get('/', [TestimonialController::class, 'list'])->name('admin.testimonial');
+        Route::post('/order', [TestimonialController::class, 'order'])->name('admin.testimonial.order');
         Route::get('/add.edit', [TestimonialController::class, 'addEdit'])->name('admin.testimonial.addEdit');
         Route::post('/store', [TestimonialController::class, 'store'])->name('admin.testimonial.store');
         Route::post('/imagedelete', [TestimonialController::class, 'imageDelete'])->name('admin.testimonial.imagedelete');

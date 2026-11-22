@@ -27,7 +27,7 @@ class HomeController extends Controller {
         $data['banners'] = Banner::where('status', 1)->get();
         $data['featured_products'] = Product::where('status', 1)->orderBy('order', 'asc')->take(8)->get();
         $data['partner_farms'] = Farm::where('status', 1)->orderBy('order', 'asc')->take(6)->get();
-        $data['testimonials'] = Testimonial::where('status', 1)->inRandomOrder()->limit(6)->get();
+        $data['testimonials'] = Testimonial::published()->limit(6)->get();
         $data['latest_notices'] = Notice::where('status', 1)->orderBy('date', 'desc')->take(3)->get();
         $data['notice'] = Notice::where('status', 1)->orderBy('date', 'desc')->first();
         $data['featured_notice'] = Notice::activeFeatured()->first();

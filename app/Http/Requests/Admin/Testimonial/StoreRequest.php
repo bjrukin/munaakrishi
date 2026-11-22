@@ -25,7 +25,7 @@ class StoreRequest extends RestRequest {
             'name'    => 'required',
             'company' => 'nullable',
             'reviews' => 'required',
-            'image'   => 'required',
+            'image'   => 'nullable',
         ];
     }
 }

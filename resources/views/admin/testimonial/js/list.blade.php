@@ -53,6 +53,51 @@ $(document).ready(function() {
         });
     });
 });
+function changeOrder(id, selectElement) {
+    let order = selectElement.value;
+    $.ajax({
+        url: '{{ route("admin.testimonial.order") }}',
+        type: 'POST',
+        data: {
+            'id': id,
+            'order': order,
+            'order_field_name': 'order',
+            '_token': '{{ csrf_token() }}'
+        },
+        success: function(data) {
+            Swal.fire({
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                timer: timer,
+                didOpen: () => {
+                    document.querySelector('.swal2-timer-progress-bar').style.backgroundColor = 'green';
+                }
+            });
+            setTimeout(function() {
+                window.location.href = "{{ route('admin.testimonial') }}";
+            }, timer);
+        },
+        error: function(xhr) {
+            var res = $.parseJSON(xhr.responseText);
+            if (res.error) {
+                Swal.fire({
+                    title: res.error,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    timer: timer,
+                    didOpen: () => {
+                        document.querySelector('.swal2-timer-progress-bar').style.backgroundColor = 'red';
+                    }
+                });
+            }
+        }
+    });
+}
+
 function deleteData(id) {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {

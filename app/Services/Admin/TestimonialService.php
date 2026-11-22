@@ -15,7 +15,7 @@ class TestimonialService {
             if ($q) {
                 $query->where('name', 'LIKE', '%' . $q . '%');
             }
-            $data['testimonials'] = $query->orderBy('id', 'asc')->paginate($per_page);
+            $data['testimonials'] = $query->orderBy('order')->orderBy('id')->paginate($per_page);
             $data['testimonials']->appends(['q' => $q]);
             $data['count'] = ($page != 1) ? (($per_page * $page) - $per_page + 1) : 1;
             return $data;
@@ -43,6 +43,27 @@ class TestimonialService {
         }
     }
 
+    public function order($request)
+    {
+        try {
+            if ($request->order_field_name !== 'order') {
+                return response()->json(['error' => 'Invalid order field.'], 422);
+            }
+
+            Testimonial::where('id', $request->id)->update([
+                'order' => $request->order,
+            ]);
+
+            return response()->json([
+                'message' => 'Order updated successfully.',
+                'error' => null,
+                'status' => 200,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
     public function store($request) {
         try {
             if ($request['id']) {
@@ -54,6 +75,7 @@ class TestimonialService {
             } else {
                 $id = 0;
                 $testimonial = new Testimonial;
+                $testimonial->order = getMax('testimonials', 'order');
                 $response['message'] = 'Testimonial created successfully.';
                 $response['error'] = null;
                 $response['status'] = 201;
@@ -65,9 +87,9 @@ class TestimonialService {
                 $image = ($request['image']) ? $request['image'] : (($testimonial) ? $testimonial->image : null);
             }
             $testimonial->name = $request['name'];
-            $testimonial->company = $request['company'];
+            $testimonial->company = $request['company'] ?? null;
             $testimonial->reviews = $request['reviews'];
-            $testimonial->image = $image;
+            $testimonial->image = $image ?: null;
             $testimonial->save();
             $response['error'] = null;
             return response()->json($response, $response['status']);
@@ -81,7 +103,7 @@ class TestimonialService {
             $id = $request->id;
             $ras = Testimonial::where('id', $id)->first();
             if ($ras) {
-                Storage::disk('public')->delete('/testimonial/' . $ras->image);
+                $this->deleteStoredImage($ras->image);
                 Testimonial::where('id', $id)->delete();
             }
             $response['message'] = 'Testimonial deleted successfully.';
@@ -99,8 +121,8 @@ class TestimonialService {
             $field_name = $request->field_name;
             $row = Testimonial::where('id', $id)->first();
             if ($row) {
-                Storage::disk('public')->delete('/testimonial/' . $row->$field_name);
-                $row->$field_name = '';
+                $this->deleteStoredImage($row->$field_name);
+                $row->$field_name = null;
                 $row->save();
             }
             $response['message'] = 'Image deleted successfully.';
@@ -110,5 +132,14 @@ class TestimonialService {
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    private function deleteStoredImage(?string $image): void
+    {
+        if (! $image || str_starts_with($image, 'assets/') || str_starts_with($image, 'http')) {
+            return;
+        }
+
+        Storage::disk('public')->delete('/testimonial/' . $image);
     }
 }

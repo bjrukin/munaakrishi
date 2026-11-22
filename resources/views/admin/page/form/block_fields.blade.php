@@ -466,6 +466,11 @@
 
     @case('testimonials')
         {{-- 11. Testimonials Block --}}
+        <div class="alert alert-light border small py-2 mb-3">
+            The quotes themselves are managed in
+            <a href="{{ route('admin.testimonial') }}">Media → Testimonials</a>.
+            Add, edit, hide, or reorder them there. This block only sets the heading and how many quotes the page shows.
+        </div>
         <div class="row">
             <div class="col-md-4 mb-2">
                 <label class="form-label small font-weight-bold">Subtitle / Kicker</label>
@@ -473,7 +478,7 @@
             </div>
             <div class="col-md-6 mb-2">
                 <label class="form-label small font-weight-bold">Section Heading / Title</label>
-                <input type="text" class="form-control form-control-sm block-title-input" name="blocks[{{ $index }}][data][title]" value="{{ $bData['title'] ?? 'What growers and partners say' }}">
+                <input type="text" class="form-control form-control-sm block-title-input" name="blocks[{{ $index }}][data][title]" value="{{ $bData['title'] ?? 'Farmers and consumers trust Munaa' }}">
             </div>
             <div class="col-md-2 mb-2">
                 <label class="form-label small font-weight-bold">Query Limit</label>

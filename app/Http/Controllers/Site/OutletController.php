@@ -29,6 +29,7 @@ class OutletController extends Controller
                 'name' => $o->name,
                 'description' => $o->address ?? 'Munaabazar Mart & Collection Point',
                 'phone' => $o->phone ?? '+977-98031 65605',
+                'email' => $o->email,
                 'map_url' => $o->map_link,
                 'map_query' => $o->address ?? $o->name,
             ];

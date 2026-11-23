@@ -24,9 +24,16 @@
               <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--color-ink); line-height: 1.5;">{{ $outlet->address ?? $outlet->description }}</p>
             </div>
             <div style="margin-top: 1.25rem; pt-2; border-top: 1px solid var(--color-line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-              <span style="font-weight: 700; color: var(--color-ink); font-size: 0.92rem;">
-                <i class="fa fa-phone me-1 text-success"></i> {{ $outlet->phone ?? '9801111111' }}
-              </span>
+              <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <span style="font-weight: 700; color: var(--color-ink); font-size: 0.92rem;">
+                  <i class="fa fa-phone me-1 text-success"></i> {{ $outlet->phone ?? '9801111111' }}
+                </span>
+                @if(!empty($outlet->email))
+                  <a href="mailto:{{ $outlet->email }}" style="color: var(--color-forest); font-size: 0.88rem; font-weight: 600; word-break: break-word;">
+                    <i class="fa fa-envelope me-1"></i> {{ $outlet->email }}
+                  </a>
+                @endif
+              </div>
               <a href="tel:{{ preg_replace('/[^0-9+]/', '', $outlet->phone ?? '') }}" class="btn btn-sm btn-forest" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">Call</a>
             </div>
           </div>

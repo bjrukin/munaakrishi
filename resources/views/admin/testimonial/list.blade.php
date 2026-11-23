@@ -30,6 +30,11 @@
                         </div>
                     </div>
                 </form>
+                <p class="text-muted small mb-0 mt-3" style="clear: both;">
+                    These quotes appear in the homepage section “Farmers and consumers trust Munaa”.
+                    Add or edit a quote here, set the order, and use Show / Hide to control what visitors see.
+                    The heading and how many quotes appear are set on the Home page block.
+                </p>
             </div>
         </div>
         <div class="card">
@@ -40,20 +45,35 @@
                         <thead class="table-dark">
                             <tr>
                                 <th width="50">SN.</th>
-                                <th width="200">Image</th>
-                                <th>Reviewed By</th>
-                                <th>Company</th>
-                                <th width="150">Status</th>
-                                <th width="150">Action</th>
+                                <th width="80">Photo</th>
+                                <th>Name</th>
+                                <th>Quote</th>
+                                <th width="90">Order</th>
+                                <th width="120">Status</th>
+                                <th width="120">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($result['testimonials'] as $testimonial)
-                            <tr>
+                            <tr id="tr{{ $testimonial->id }}">
                                 <td>{{ $result['count']++ }}</td>
-                                <td><img src="{{ $testimonial->url_image}}" height="120" width="150"></td>
-                                <td>{{ $testimonial->name }}</td>
-                                <td>{{ $testimonial->company }}</td>
+                                <td>
+                                    <img src="{{ $testimonial->url_image }}" alt="{{ $testimonial->name }}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 50%;">
+                                </td>
+                                <td>
+                                    <strong>{{ $testimonial->name }}</strong>
+                                    @if($testimonial->company)
+                                        <br><small class="text-muted">{{ $testimonial->company }}</small>
+                                    @endif
+                                </td>
+                                <td>{{ \Illuminate\Support\Str::limit($testimonial->plain_review, 110) }}</td>
+                                <td>
+                                    <select name="order" class="form-select" onchange="changeOrder('{{ $testimonial->id }}', this)">
+                                        @for($i = 1; $i <= $order; $i++)
+                                            <option value="{{ $i }}" @if((int) $testimonial->order === $i) selected @endif>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </td>
                                 <td>
                                     <label class="switch">
                                         <input class="switch-input switch-status" type="checkbox"
@@ -79,7 +99,7 @@
                 </div>
                 @else
                 <div class="alert alert-light" role="alert">
-                    No data available.
+                    No quotes yet. Use Add New to publish the first one on the homepage.
                 </div>
                 @endif
             </div>

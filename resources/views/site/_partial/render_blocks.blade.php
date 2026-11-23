@@ -57,7 +57,7 @@
       } elseif ($type === 'board_of_directors') {
         $data['boardMembers'] = \App\Models\Leadership::where('status', 1)->orderBy('order', 'asc')->take($limit ?: 12)->get();
       } elseif ($type === 'testimonials') {
-        $data['testimonials'] = \App\Models\Testimonial::where('status', 1)->inRandomOrder()->limit($limit ?: 6)->get();
+        $data['testimonials'] = \App\Models\Testimonial::published()->limit($limit ?: 6)->get();
       } elseif ($type === 'history' || $type === 'our_journey') {
         $data['histories'] = \App\Models\History::where('status', 1)->orderBy('year', 'asc')->get();
       } elseif ($type === 'achievements') {

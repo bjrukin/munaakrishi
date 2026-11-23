@@ -1,7 +1,8 @@
 <div class="card">
     <div class="card-body">
         <fieldset class="border rounded-3 p-3">
-            <legend>Image</legend>
+            <legend>Photo <span class="text-muted fw-normal">(optional)</span></legend>
+            <p class="text-muted small">A square portrait works best. Leave this empty to use the default photo.</p>
             <div class="mb-3">
                 <div class="drag-container">
                     <button type="button" class="{{ ($row && $row->image) ? 'd-block' : 'd-none' }} img-delete-btn" onclick="imageDelete('image')"

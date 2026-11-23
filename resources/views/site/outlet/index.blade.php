@@ -48,6 +48,11 @@
                   </td>
                   <td>
                     <div style="font-weight: 600;">{{ $outlet['phone'] }}</div>
+                    @if(!empty($outlet['email']))
+                      <a href="mailto:{{ $outlet['email'] }}" style="display: block; margin-top: 0.35rem; color: var(--color-forest); font-size: 0.88rem; font-weight: 600; word-break: break-word;">
+                        {{ $outlet['email'] }}
+                      </a>
+                    @endif
                   </td>
                   <td>
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">

@@ -26,7 +26,7 @@
             $partner_farms = \App\Models\Farm::where('status', 1)->orderBy('order', 'asc')->take($limit ?: 4)->get();
           }
           if ($type === 'testimonials' && (!isset($testimonials) || $testimonials->isEmpty())) {
-            $testimonials = \App\Models\Testimonial::where('status', 1)->inRandomOrder()->limit($limit ?: 5)->get();
+            $testimonials = \App\Models\Testimonial::published()->limit($limit ?: 5)->get();
           }
           if ($type === 'news' && (!isset($latest_notices) || $latest_notices->isEmpty())) {
             $latest_notices = \App\Models\Notice::where('status', 1)->orderBy('date', 'desc')->take($limit ?: 3)->get();

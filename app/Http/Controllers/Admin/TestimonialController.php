@@ -20,12 +20,18 @@ class TestimonialController extends Controller
         
         $data['nav'] = 'media';
         $data['sub_nav'] = 'testimonial';
-        $data['page_title'] = 'Testimonial';
+        $data['page_title'] = 'Testimonials';
         $per_page = 50;
         $page = $request->page ?? 1;
         $data['q'] = $request->q ?? '';
         $data['result'] = $this->service->list($per_page, $page, $data['q']);
+        $data['order'] = Testimonial::count();
         return view('admin.testimonial.list', $data);
+    }
+
+    public function order(Request $request)
+    {
+        return $this->service->order($request);
     }
 
     public function status(Request $request)

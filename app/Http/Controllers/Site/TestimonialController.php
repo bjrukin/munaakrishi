@@ -12,7 +12,7 @@ class TestimonialController extends Controller {
         $data['metahead'] = 'seo';
         $data['page_title'] = 'Testimonials';
         $data['banner'] = Banner::where(['name' => 'Testimonial', 'status' => 1])->first();
-        $data['testimonials'] = Testimonial::where('status', '1')->orderBy('id', 'desc')->get();
+        $data['testimonials'] = Testimonial::published()->get();
         return view('site.testimonial.list', $data);
 
     }

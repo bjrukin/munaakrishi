@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
-use App\Models\Product;
 use App\Models\Office;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Services\Admin\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(protected ProductService $service)
-    {
-    }
+    public function __construct(protected ProductService $service) {}
 
     public function list(Request $request)
     {
@@ -23,6 +22,7 @@ class ProductController extends Controller
         $data['q'] = $request->q ?? '';
         $data['result'] = $this->service->list($data['q']);
         $data['order'] = Product::count();
+
         return view('admin.product.list', $data);
     }
 
@@ -43,8 +43,19 @@ class ProductController extends Controller
         $data['sub_nav'] = 'product';
         $data['page_title'] = ($id == 0) ? 'Add Product' : 'Edit Product';
         $data['action'] = route('admin.product.store');
-        $data['row'] = Product::with('outlets')->where('id', $id)->first();
+        $data['row'] = Product::with(['outlets', 'productCategory'])->where('id', $id)->first();
         $data['outlets'] = Office::where('status', 1)->orderBy('order')->orderBy('name')->get();
+        $data['categories'] = ProductCategory::query()
+            ->where(function ($query) use ($data) {
+                $query->where('status', true);
+                if ($data['row']) {
+                    $query->orWhereKey($data['row']->product_category_id);
+                }
+            })
+            ->orderBy('rank')
+            ->orderBy('name')
+            ->get();
+
         return view('admin.product.form', $data);
     }
 

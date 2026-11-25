@@ -15,17 +15,18 @@ class ProductService
     {
         try {
             $data['q'] = $q;
-            $query = Product::select('*');
+            $query = Product::query()->with('productCategory');
             if ($q) {
                 $query->where(function ($sq) use ($q) {
-                    $sq->where('name', 'LIKE', '%' . $q . '%')
-                       ->orWhere('nepali_name', 'LIKE', '%' . $q . '%')
-                       ->orWhere('district', 'LIKE', '%' . $q . '%')
-                       ->orWhere('category', 'LIKE', '%' . $q . '%');
+                    $sq->where('name', 'LIKE', '%'.$q.'%')
+                        ->orWhere('nepali_name', 'LIKE', '%'.$q.'%')
+                        ->orWhere('district', 'LIKE', '%'.$q.'%')
+                        ->orWhereHas('productCategory', fn ($category) => $category->where('name', 'LIKE', '%'.$q.'%'));
                 });
             }
             $data['products'] = $query->orderBy('order', 'asc')->get();
             $data['count'] = 1;
+
             return $data;
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -39,6 +40,7 @@ class ProductService
                 $request->field_name => $request->val,
             ]);
             $msg = ($request->val == 1) ? 'Product enabled successfully.' : 'Product disabled successfully.';
+
             return response()->json(['message' => $msg, 'error' => null, 'status' => 200], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -49,6 +51,7 @@ class ProductService
     {
         try {
             Product::where('id', $request->id)->update([$request->order_field_name => $request->order]);
+
             return response()->json(['message' => 'Order updated successfully.', 'error' => null, 'status' => 200], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -58,34 +61,34 @@ class ProductService
     public function store($request)
     {
         try {
-            if (!empty($request['id'])) {
+            if (! empty($request['id'])) {
                 $product = Product::findOrFail($request['id']);
                 $response['message'] = 'Product updated successfully.';
                 $response['status'] = 202;
             } else {
-                $product = new Product();
+                $product = new Product;
                 $product->order = getMax('products', 'order') ?: (Product::count() + 1);
                 $response['message'] = 'Product created successfully.';
                 $response['status'] = 201;
             }
 
-            if (isset($request['image']) && !empty($request['image']) && preg_match('#^data:image.*?base64,#', $request['image'])) {
-                $image = $this->StoreBase64Image($request['image'], '/product/', Str::slug($request['name']) . '-' . time());
+            if (isset($request['image']) && ! empty($request['image']) && preg_match('#^data:image.*?base64,#', $request['image'])) {
+                $image = $this->StoreBase64Image($request['image'], '/product/', Str::slug($request['name']).'-'.time());
             } else {
                 $image = $request['image'] ?? ($product->image ?? null);
             }
 
-            $slug = !empty($request['slug']) ? Str::slug($request['slug']) : Str::slug($request['name']);
+            $slug = ! empty($request['slug']) ? Str::slug($request['slug']) : Str::slug($request['name']);
             // Ensure unique slug
             $existing = Product::where('slug', $slug)->where('id', '!=', $product->id ?? 0)->exists();
             if ($existing) {
-                $slug .= '-' . time();
+                $slug .= '-'.time();
             }
 
             $product->name = $request['name'];
             $product->nepali_name = $request['nepali_name'] ?? null;
             $product->slug = $slug;
-            $product->category = $request['category'] ?? 'grains';
+            $product->product_category_id = $request['product_category_id'];
             $product->district = $request['district'] ?? null;
             $product->tag = $request['tag'] ?? null;
             $product->description = $request['description'] ?? null;
@@ -93,13 +96,14 @@ class ProductService
             $product->grown_by = $request['grown_by'] ?? null;
             $product->storage = $request['storage'] ?? null;
             $product->pack_size = $request['pack_size'] ?? null;
-            $product->price = !empty($request['price']) ? $request['price'] : null;
+            $product->price = ! empty($request['price']) ? $request['price'] : null;
             $product->unit = $request['unit'] ?? 'kg';
             $product->image = $image;
             $product->save();
             $product->outlets()->sync($request['outlet_ids'] ?? []);
 
             $response['error'] = null;
+
             return response()->json($response, $response['status']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -111,11 +115,12 @@ class ProductService
         try {
             $product = Product::find($request->id);
             if ($product) {
-                if ($product->image && Storage::disk('public')->exists('/product/' . $product->image)) {
-                    Storage::disk('public')->delete('/product/' . $product->image);
+                if ($product->image && Storage::disk('public')->exists('/product/'.$product->image)) {
+                    Storage::disk('public')->delete('/product/'.$product->image);
                 }
                 $product->delete();
             }
+
             return response()->json(['message' => 'Product deleted successfully.', 'error' => null, 'status' => 200], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
@@ -128,12 +133,13 @@ class ProductService
             $product = Product::find($request->id);
             if ($product) {
                 $field = $request->field_name ?? 'image';
-                if ($product->$field && Storage::disk('public')->exists('/product/' . $product->$field)) {
-                    Storage::disk('public')->delete('/product/' . $product->$field);
+                if ($product->$field && Storage::disk('public')->exists('/product/'.$product->$field)) {
+                    Storage::disk('public')->delete('/product/'.$product->$field);
                 }
                 $product->$field = null;
                 $product->save();
             }
+
             return response()->json(['message' => 'Image deleted successfully.', 'error' => null, 'status' => 200], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);

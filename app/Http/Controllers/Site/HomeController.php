@@ -11,8 +11,10 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\Testimonial;
 
-class HomeController extends Controller {
-    public function index() {
+class HomeController extends Controller
+{
+    public function index()
+    {
         $data['nav'] = 'home';
         $data['metahead'] = 'default';
         $data['general_setting'] = GeneralSetting::first();
@@ -25,7 +27,7 @@ class HomeController extends Controller {
 
         // Preload dynamic records
         $data['banners'] = Banner::where('status', 1)->get();
-        $data['featured_products'] = Product::where('status', 1)->orderBy('order', 'asc')->take(8)->get();
+        $data['featured_products'] = Product::with('productCategory')->where('status', 1)->orderBy('order', 'asc')->take(8)->get();
         $data['partner_farms'] = Farm::where('status', 1)->orderBy('order', 'asc')->take(6)->get();
         $data['testimonials'] = Testimonial::published()->limit(6)->get();
         $data['latest_notices'] = Notice::where('status', 1)->orderBy('date', 'desc')->take(3)->get();

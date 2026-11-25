@@ -20,14 +20,17 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Category <span class="text-danger">*</span></label>
-                    <select class="form-select" name="category" required>
-                        <option value="grains" {{ ($row && $row->category == 'grains') ? 'selected' : '' }}>Grains & Flour</option>
-                        <option value="fruits" {{ ($row && $row->category == 'fruits') ? 'selected' : '' }}>Fruits</option>
-                        <option value="vegetables" {{ ($row && $row->category == 'vegetables') ? 'selected' : '' }}>Vegetables</option>
-                        <option value="honey" {{ ($row && $row->category == 'honey') ? 'selected' : '' }}>Honey</option>
-                        <option value="tea-spices" {{ ($row && $row->category == 'tea-spices') ? 'selected' : '' }}>Tea & Spices</option>
-                        <option value="pickles-dried" {{ ($row && $row->category == 'pickles-dried') ? 'selected' : '' }}>Pickles & Dried</option>
+                    <select class="form-select" name="product_category_id" required>
+                        <option value="">Select a category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" @selected((string) old('product_category_id', $row?->product_category_id) === (string) $category->id)>
+                                {{ $category->name }}@if(!$category->status) (Inactive — current category)@endif
+                            </option>
+                        @endforeach
                     </select>
+                    @if($categories->isEmpty())
+                        <div class="form-text text-danger">No active categories are available. Create or activate a product category first.</div>
+                    @endif
                 </div>
             </div>
 

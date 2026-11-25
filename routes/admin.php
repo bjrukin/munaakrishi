@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\LeadershipController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SeoController;
@@ -215,6 +216,15 @@ Route::group(['middleware' => 'auth.admin'], function () {
         Route::post('/imagedelete', [\App\Http\Controllers\Admin\ProductController::class, 'imageDelete'])->name('admin.product.imagedelete');
         Route::post('/delete', [\App\Http\Controllers\Admin\ProductController::class, 'delete'])->name('admin.product.delete');
         Route::post('/status', [\App\Http\Controllers\Admin\ProductController::class, 'status'])->name('admin.product.status');
+    });
+
+    Route::prefix('product-category')->group(function () {
+        Route::get('/', [ProductCategoryController::class, 'list'])->name('admin.product-category');
+        Route::get('/add.edit', [ProductCategoryController::class, 'addEdit'])->name('admin.product-category.addEdit');
+        Route::post('/store', [ProductCategoryController::class, 'store'])->name('admin.product-category.store');
+        Route::post('/delete', [ProductCategoryController::class, 'delete'])->name('admin.product-category.delete');
+        Route::post('/status', [ProductCategoryController::class, 'status'])->name('admin.product-category.status');
+        Route::post('/rank', [ProductCategoryController::class, 'rank'])->name('admin.product-category.rank');
     });
 
     Route::prefix('farm')->group(function () {

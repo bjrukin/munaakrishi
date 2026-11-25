@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -20,11 +21,12 @@ class ProductController extends Controller
         $data['productBlock'] = $productBlock;
         $data['page_title'] = $productBlock['title'] ?? 'Products';
 
-        $query = Product::where('status', 1)->orderBy('order', 'asc');
-        if (!empty($productBlock['limit']) && is_numeric($productBlock['limit']) && (int)$productBlock['limit'] > 0) {
-            $query->take((int)$productBlock['limit']);
+        $query = Product::with('productCategory')->where('status', 1)->orderBy('order', 'asc');
+        if (! empty($productBlock['limit']) && is_numeric($productBlock['limit']) && (int) $productBlock['limit'] > 0) {
+            $query->take((int) $productBlock['limit']);
         }
         $dbProducts = $query->get();
+        $data['categories'] = ProductCategory::where('status', true)->orderBy('rank')->orderBy('name')->get();
 
         $data['products'] = $dbProducts->map(function ($p) {
             return [
@@ -32,7 +34,8 @@ class ProductController extends Controller
                 'name' => $p->name,
                 'nepali' => $p->nepali_name ?? $p->name,
                 'slug' => $p->slug,
-                'category' => $p->category,
+                'category' => $p->productCategory?->slug ?? 'uncategorized',
+                'category_label' => $p->productCategory?->name ?? 'Uncategorized',
                 'district' => $p->district ?? 'Nepal',
                 'tag' => $p->tag ?? '',
                 'description' => $p->description ?? '',
@@ -47,11 +50,11 @@ class ProductController extends Controller
 
     public function detail($slug)
     {
-        $productModel = Product::where('status', 1)->where('slug', $slug)->first();
+        $productModel = Product::with('productCategory')->where('status', 1)->where('slug', $slug)->first();
 
-        if (!$productModel) {
-            $productModel = Product::where('status', 1)->first();
-            if (!$productModel) {
+        if (! $productModel) {
+            $productModel = Product::with('productCategory')->where('status', 1)->first();
+            if (! $productModel) {
                 abort(404);
             }
         }
@@ -61,30 +64,32 @@ class ProductController extends Controller
             'slug' => $productModel->slug,
             'name' => $productModel->name,
             'nepali' => $productModel->nepali_name ?? $productModel->name,
-            'category' => $productModel->category,
-            'category_label' => ucfirst(str_replace('-', ' & ', $productModel->category)),
+            'category' => $productModel->productCategory?->slug ?? 'uncategorized',
+            'category_label' => $productModel->productCategory?->name ?? 'Uncategorized',
             'district' => $productModel->district ?? 'Nepal',
             'image' => $productModel->url_image,
             'tag' => $productModel->tag ?? '',
             'price' => $productModel->price,
             'unit' => $productModel->unit ?? 'kg',
             'description' => $productModel->description ?? '',
-            'producer' => $productModel->grown_by ?? 'Munaa Krishi Partner Cooperative (' . ($productModel->district ?? 'Nepal') . ')',
+            'producer' => $productModel->grown_by ?? 'Munaa Krishi Partner Cooperative ('.($productModel->district ?? 'Nepal').')',
             'producer_link' => route('farms'),
-            'pack_sizes' => $productModel->pack_size ?? 'Standard packaging in ' . ($productModel->unit ?? 'kg') . ' increments',
+            'pack_sizes' => $productModel->pack_size ?? 'Standard packaging in '.($productModel->unit ?? 'kg').' increments',
             'storage' => $productModel->storage ?? 'Store in a cool, dry place away from direct sunlight.',
             'details' => $productModel->detail ?? $productModel->description ?? 'Grown and collected adhering to sustainable agricultural standards and tested for quality assurance.',
         ];
 
         $relatedModels = Product::where('status', 1)
             ->where('id', '!=', $productModel->id)
-            ->where('category', $productModel->category)
+            ->where('product_category_id', $productModel->product_category_id)
+            ->with('productCategory')
             ->take(3)
             ->get();
 
         if ($relatedModels->isEmpty()) {
             $relatedModels = Product::where('status', 1)
                 ->where('id', '!=', $productModel->id)
+                ->with('productCategory')
                 ->take(3)
                 ->get();
         }
@@ -94,7 +99,8 @@ class ProductController extends Controller
                 'name' => $p->name,
                 'nepali' => $p->nepali_name ?? $p->name,
                 'slug' => $p->slug,
-                'category' => $p->category,
+                'category' => $p->productCategory?->slug ?? 'uncategorized',
+                'category_label' => $p->productCategory?->name ?? 'Uncategorized',
                 'district' => $p->district ?? 'Nepal',
                 'image' => $p->url_image,
                 'description' => $p->description ?? '',

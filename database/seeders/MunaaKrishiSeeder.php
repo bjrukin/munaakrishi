@@ -10,10 +10,10 @@ use App\Models\GalleryImage;
 use App\Models\Notice;
 use App\Models\Office;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Team;
 use App\Models\Video;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class MunaaKrishiSeeder extends Seeder
 {
@@ -165,6 +165,10 @@ class MunaaKrishiSeeder extends Seeder
             ];
 
             foreach ($products as $p) {
+                $categorySlug = $p['category'];
+                unset($p['category']);
+                $category = ProductCategory::where('slug', $categorySlug)->firstOrFail();
+                $p['product_category_id'] = $category->id;
                 Product::create($p);
             }
         }

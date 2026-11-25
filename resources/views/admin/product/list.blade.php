@@ -62,7 +62,7 @@
                                         <br><small class="text-muted">{{ $product->nepali_name }}</small>
                                     @endif
                                 </td>
-                                <td><span class="badge bg-secondary">{{ ucfirst($product->category) }}</span></td>
+                                <td><span class="badge bg-secondary">{{ $product->productCategory?->name ?? 'Unassigned' }}</span></td>
                                 <td>{{ $product->district ?? '-' }}</td>
                                 <td>
                                     @if($product->price)

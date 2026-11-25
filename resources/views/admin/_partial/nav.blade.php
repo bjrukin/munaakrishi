@@ -30,6 +30,9 @@
                             <li class="@if($sub_nav == 'product') menuitem-active @endif">
                                 <a href="{{route('admin.product')}}">Products</a>
                             </li>
+                            <li class="@if($sub_nav == 'product_category') menuitem-active @endif">
+                                <a href="{{route('admin.product-category')}}">Product Categories</a>
+                            </li>
                             <li class="@if($sub_nav == 'farm') menuitem-active @endif">
                                 <a href="{{route('admin.farm')}}">Partner Farms</a>
                             </li>

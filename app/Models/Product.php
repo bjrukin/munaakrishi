@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
@@ -13,7 +14,7 @@ class Product extends Model
         'name',
         'nepali_name',
         'slug',
-        'category',
+        'product_category_id',
         'district',
         'tag',
         'description',
@@ -35,14 +36,20 @@ class Product extends Model
         return $this->belongsToMany(Office::class);
     }
 
+    public function productCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class);
+    }
+
     public function getUrlImageAttribute()
     {
-        if (!$this->image) {
+        if (! $this->image) {
             return asset('assets/images/products/greens-seasonal.jpg');
         }
         if (str_starts_with($this->image, 'assets/') || str_starts_with($this->image, 'http')) {
             return asset($this->image);
         }
-        return asset('storage/uploads/product/' . $this->image);
+
+        return asset('storage/uploads/product/'.$this->image);
     }
 }

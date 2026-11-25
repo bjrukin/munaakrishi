@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Banner;
 use App\Models\Farm;
 use App\Models\Gallery;
 use App\Models\Notice;
@@ -24,8 +23,9 @@ class DashboardController extends Controller
         $data['total_notices'] = Notice::count();
         $data['total_teams'] = Team::count();
         $data['total_galleries'] = Gallery::count();
-        $data['recent_products'] = Product::orderBy('id', 'desc')->take(5)->get();
+        $data['recent_products'] = Product::with('productCategory')->orderBy('id', 'desc')->take(5)->get();
         $data['recent_notices'] = Notice::orderBy('date', 'desc')->take(5)->get();
+
         return view('admin.dashboard.index', $data);
     }
 }

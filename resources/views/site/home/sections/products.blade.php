@@ -40,8 +40,8 @@
         <div class="product-grid home-product-grid card-marquee-set" @if($isDuplicate) aria-hidden="true" inert @endif>
         @foreach($homeProducts->take(8) as $product)
         @php
-          $category = data_get($product, 'category', 'farm-products');
-          $categoryLabel = [
+          $category = data_get($product, 'productCategory.slug', data_get($product, 'category', 'farm-products'));
+          $categoryLabel = data_get($product, 'productCategory.name') ?? ([
             'grains' => 'Grains and Flour',
             'grains-and-flour' => 'Grains and Flour',
             'vegetables' => 'Vegetables',
@@ -51,7 +51,7 @@
             'tea-spices' => 'Tea and Spices',
             'tea-and-spices' => 'Tea and Spices',
             'pickles-dried' => 'Pickles and Dried Foods',
-          ][$category] ?? str($category)->replace(['-', '_'], ' ')->title();
+          ][$category] ?? str($category)->replace(['-', '_'], ' ')->title());
           $image = is_object($product) ? $product->url_image : data_get($product, 'image');
           $outletCount = data_get($product, 'outlet_count', 5);
           $productUrl = route('products.detail', data_get($product, 'slug'));

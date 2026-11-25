@@ -39,13 +39,9 @@
         <!-- Category Filters -->
         <div style="margin-top: 2rem;" class="filter-bar">
           <button type="button" class="filter-pill category-filter-btn active" data-category="all">All products</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="grains">Grains and Flour</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="vegetables">Vegetables</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="fruits">Fruits</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="honey">Honey</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="dairy">Dairy and Cheese</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="tea-spices">Tea and Spices</button>
-          <button type="button" class="filter-pill category-filter-btn" data-category="pickles-dried">Pickles and Dried</button>
+          @foreach(($categories ?? collect()) as $category)
+            <button type="button" class="filter-pill category-filter-btn" data-category="{{ $category->slug }}">{{ $category->name }}</button>
+          @endforeach
         </div>
 
         <!-- Products Grid -->
@@ -57,17 +53,7 @@
                   $pImg = $product['image'] ?? 'assets/images/products/rice-marsi.jpg';
                   $imgUrl = str_starts_with($pImg, 'http') ? $pImg : asset($pImg);
                   $category = $product['category'] ?? 'grains';
-                  $categoryLabel = [
-                    'grains' => 'Grains and Flour',
-                    'grains-and-flour' => 'Grains and Flour',
-                    'vegetables' => 'Vegetables',
-                    'fruits' => 'Fruits',
-                    'honey' => 'Honey',
-                    'dairy' => 'Dairy and Cheese',
-                    'tea-spices' => 'Tea and Spices',
-                    'tea-and-spices' => 'Tea and Spices',
-                    'pickles-dried' => 'Pickles and Dried Foods',
-                  ][$category] ?? str($category)->replace(['-', '_'], ' ')->title();
+                  $categoryLabel = $product['category_label'] ?? str($category)->replace(['-', '_'], ' ')->title();
                   $productUrl = route('products.detail', $product['slug']);
                   $outletCount = $product['outlet_count'] ?? 5;
                 @endphp

@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Admin\Product;
 
 use App\Http\Requests\RestRequest;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use Closure;
 
 class StoreRequest extends RestRequest
 {
@@ -18,7 +21,19 @@ class StoreRequest extends RestRequest
             'name' => 'required|string|max:255',
             'nepali_name' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'category' => 'required|string|max:100',
+            'product_category_id' => [
+                'required',
+                'integer',
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    $currentCategoryId = Product::whereKey($this->integer('id'))->value('product_category_id');
+                    $valid = ProductCategory::whereKey($value)
+                        ->where(fn ($query) => $query->where('status', true)->orWhere('id', $currentCategoryId))
+                        ->exists();
+                    if (! $valid) {
+                        $fail('Please select an active product category.');
+                    }
+                },
+            ],
             'district' => 'nullable|string|max:100',
             'tag' => 'nullable|string|max:100',
             'description' => 'nullable|string',

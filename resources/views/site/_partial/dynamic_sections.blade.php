@@ -20,7 +20,7 @@
           $limit = (int) ($settings['limit'] ?? 6);
 
           if ($type === 'products' && (!isset($featured_products) || $featured_products->isEmpty())) {
-            $featured_products = \App\Models\Product::where('status', 1)->orderBy('order', 'asc')->take(min(4, max(1, $limit)))->get();
+            $featured_products = \App\Models\Product::with('productCategory')->where('status', 1)->orderBy('order', 'asc')->take(min(4, max(1, $limit)))->get();
           }
           if ($type === 'farms' && (!isset($partner_farms) || $partner_farms->isEmpty())) {
             $partner_farms = \App\Models\Farm::where('status', 1)->orderBy('order', 'asc')->take($limit ?: 4)->get();

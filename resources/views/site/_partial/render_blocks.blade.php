@@ -39,7 +39,7 @@
       if ($type === 'hero') {
         $data['banners'] = \App\Models\Banner::where('status', 1)->get();
       } elseif ($type === 'products') {
-        $data['featured_products'] = \App\Models\Product::where('status', 1)->orderBy('order', 'asc')->take($limit ?: 8)->get();
+        $data['featured_products'] = \App\Models\Product::with('productCategory')->where('status', 1)->orderBy('order', 'asc')->take($limit ?: 8)->get();
       } elseif ($type === 'farms') {
         $data['partner_farms'] = \App\Models\Farm::where('status', 1)->orderBy('order', 'asc')->take($limit ?: 6)->get();
       } elseif ($type === 'faqs') {

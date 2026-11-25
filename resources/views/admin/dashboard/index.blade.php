@@ -127,7 +127,7 @@
                                                 <strong>{{ $rp->name }}</strong>
                                                 <br><small class="text-muted">{{ $rp->district }}</small>
                                             </td>
-                                            <td><span class="badge bg-light text-dark">{{ ucfirst($rp->category) }}</span></td>
+                                            <td><span class="badge bg-light text-dark">{{ $rp->productCategory?->name ?? 'Unassigned' }}</span></td>
                                             <td>{{ $rp->price ? 'Rs. ' . number_format($rp->price, 2) : '-' }}</td>
                                             <td>
                                                 <span class="badge {{ $rp->status ? 'bg-success' : 'bg-secondary' }}">
